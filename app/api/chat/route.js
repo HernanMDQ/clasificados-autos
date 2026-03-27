@@ -7,18 +7,19 @@ const supabase = createClient(
 
 export async function POST(req) {
   try {
-    const { message } = await req.json();
+    const { message, historial } = await req.json();
 
     const { data: autos } = await supabase.from("autos").select("*");
 
-    const prompt = `Sos un asistente de clasificados de autos usados. 
-Tenés acceso a este listado de autos disponibles en JSON:
+    const prompt = `Sos un asistente de clasificados de autos usados.
+Tenés acceso a este listado de autos disponibles:
 ${JSON.stringify(autos, null, 2)}
 
-Respondé en español de forma amigable y conversacional.
-Si el usuario busca un auto, sugerí opciones del listado que coincidan.
+Respondé en español de forma amigable y concisa, maximo 3 oraciones.
+Si el usuario busca un auto, sugeri opciones del listado que coincidan.
 Si no hay coincidencias, avisale amablemente.
-Si te preguntan algo que no es sobre autos, redirigí la conversación.`;
+Si preguntan por detalles de un auto ya mencionado, usá el contexto de la conversacion.
+Si te preguntan algo que no es sobre autos, redirigi la conversacion.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -30,14 +31,13 @@ Si te preguntan algo que no es sobre autos, redirigí la conversación.`;
         model: "llama-3.3-70b-versatile",
         messages: [
           { role: "system", content: prompt },
-          { role: "user", content: message }
+          ...historial
         ]
       })
     });
 
     const data = await response.json();
-    console.log("Respuesta Groq:", JSON.stringify(data));
-const reply = data.choices?.[0]?.message?.content || "No pude obtener respuesta";
+    const reply = data.choices?.[0]?.message?.content || "No pude obtener respuesta";
 
     return Response.json({ reply });
 

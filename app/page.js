@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [messages, setMessages] = useState([
-    { role: "assistant", text: "¡Hola! Soy tu asistente de autos. ¿Qué tipo de auto estás buscando?" }
+    { role: "assistant", text: "Hola! Soy tu asistente de autos. Que tipo de auto estas buscando?" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,14 +12,21 @@ export default function Home() {
     if (!input.trim()) return;
 
     const userMessage = { role: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
+      body: JSON.stringify({
+        message: input,
+        historial: updatedMessages.map((m) => ({
+          role: m.role === "user" ? "user" : "assistant",
+          content: m.text
+        }))
+      }),
     });
 
     const data = await res.json();
@@ -35,10 +42,10 @@ export default function Home() {
     <main className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-lg p-8 max-w-xl w-full">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
-          🚗 Clasificados IA
+          Clasificados IA
         </h1>
         <p className="text-center text-gray-500 mb-6">
-          Buscá tu próximo auto conversando con nuestra IA
+          Busca tu proximo auto conversando con nuestra IA
         </p>
         <div className="bg-gray-50 rounded-xl p-4 h-64 overflow-y-auto mb-4 flex flex-col gap-3">
           {messages.map((msg, i) => (
