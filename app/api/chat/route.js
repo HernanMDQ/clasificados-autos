@@ -9,7 +9,7 @@ export async function POST(req) {
   try {
     const { message, historial } = await req.json();
 
-    const { data: autos } = await supabase.from("autos").select("*");
+    const { data: autos } = await supabase.from("autos").select("*").eq("estado", "aprobado");
 
     const prompt = `Sos un asistente de clasificados de autos usados.
 Tenés acceso a este listado de autos disponibles:
