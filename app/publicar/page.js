@@ -20,24 +20,26 @@ export default function Publicar() {
   const [foto, setFoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [exito, setExito] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrorMsg("");
   };
 
   const handleSubmit = async () => {
     if (!form.marca || !form.modelo || !form.anno || !form.km || !form.precio || !form.telefono) {
-      alert("Por favor completa todos los campos obligatorios");
+      setErrorMsg("Por favor completa todos los campos obligatorios");
       return;
     }
 
     if (!foto) {
-      alert("Por favor agrega una foto del auto");
+      alsetErrorMsgert("Por favor agrega una foto del auto");
       return;
     }
 
     if (foto.size > 1 * 1024 * 1024) {
-      alert("La foto no puede pesar mas de 1MB");
+      setErrorMsg("La foto no puede pesar mas de 1MB");
       return;
     }
     const { data: autoExistente } = await supabase
@@ -48,7 +50,7 @@ export default function Publicar() {
       .maybeSingle();
 
     if (autoExistente) {
-      alert("Ya existe un auto aprobado con este numero de telefono. Solo se permite un vehiculo por persona.");
+      setErrorMsg("Ya existe un auto aprobado con este numero de telefono. Solo se permite un vehiculo por persona.");
       return;
     }
 
@@ -91,7 +93,7 @@ export default function Publicar() {
       console.log("Auto insertado correctamente");
       setExito(true);
     } catch (err) {
-      alert("Error al publicar: " + err.message);
+      setErrorMsg("Error al publicar: " + err.message);
     }
     setLoading(false);
   };
@@ -184,6 +186,11 @@ export default function Publicar() {
             disabled={loading}
             className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600 disabled:opacity-50"
           >
+            {errorMsg && (
+            <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+              {errorMsg}
+            </div>
+          )}
             {loading ? "Publicando..." : "Publicar anuncio"}
           </button>
         </div>

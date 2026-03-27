@@ -18,7 +18,7 @@ export default function Admin() {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [pestana, setPestana] = useState("pendientes");
+  const [pestana, setPestana] = useState("pendiente");
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [anno, setAnno] = useState("");
@@ -246,7 +246,7 @@ export default function Admin() {
                   Publicado: {new Date(auto.created_at).toLocaleDateString("es-AR")}
                 </p>
                 <div className="flex gap-2 mt-3 flex-wrap">
-                  {pestana === "pendientes" && (
+                  {pestana === "pendiente" && (
                     <>
                       <button
                         onClick={() => cambiarEstado(auto.id, "aprobado")}
