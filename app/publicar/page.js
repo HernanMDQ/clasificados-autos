@@ -127,8 +127,33 @@ export default function Publicar() {
             value={form.marca}
             onChange={handleChange}
             placeholder="Marca (ej: Toyota) *"
+            list="lista-marcas"
             className="border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+          <datalist id="lista-marcas">
+            <option value="Toyota" />
+            <option value="Ford" />
+            <option value="Chevrolet" />
+            <option value="Volkswagen" />
+            <option value="Renault" />
+            <option value="Peugeot" />
+            <option value="Fiat" />
+            <option value="Honda" />
+            <option value="Nissan" />
+            <option value="Hyundai" />
+            <option value="Kia" />
+            <option value="Citroen" />
+            <option value="Mercedes-Benz" />
+            <option value="BMW" />
+            <option value="Audi" />
+            <option value="Jeep" />
+            <option value="Dodge" />
+            <option value="Ram" />
+            <option value="Mitsubishi" />
+            <option value="Subaru" />
+            <option value="Suzuki" />
+            <option value="Mazda" />
+          </datalist>
           <input
             name="modelo"
             value={form.modelo}
