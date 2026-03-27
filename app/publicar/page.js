@@ -44,8 +44,8 @@ export default function Publicar() {
       .from("autos")
       .select("id")
       .eq("telefono", form.telefono)
-      .eq("estado", "aprobado")
-      .single();
+      .in("estado", ["aprobado", "pendiente"])
+      .maybeSingle();
 
     if (autoExistente) {
       alert("Ya existe un auto aprobado con este numero de telefono. Solo se permite un vehiculo por persona.");
@@ -84,7 +84,11 @@ export default function Publicar() {
         }
       ]);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error al insertar:", error);
+        throw error;
+      }
+      console.log("Auto insertado correctamente");
       setExito(true);
     } catch (err) {
       alert("Error al publicar: " + err.message);

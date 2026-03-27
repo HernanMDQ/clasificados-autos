@@ -77,6 +77,22 @@ export default function Admin() {
     cargarAutos(pestana);
   };
 
+  const eliminar = async (id) => {
+    if (!confirm("Seguro que queres eliminar este anuncio?")) return;
+    
+    const auto = autos.find((a) => a.id === id);
+    
+    if (auto?.foto_url) {
+      const fileName = auto.foto_url.split("/fotos-autos/")[1];
+      if (fileName) {
+        await supabase.storage.from("fotos-autos").remove([fileName]);
+      }
+    }
+
+    await supabase.from("autos").delete().eq("id", id);
+    cargarAutos(pestana);
+  };
+
   const handleLogin = () => {
     if (usuario === USER && password === PASSWORD) {
       setAutenticado(true);
@@ -89,7 +105,7 @@ export default function Admin() {
   useEffect(() => {
     if (autenticado) {
       limpiarRechazados();
-      cargarAutos("pendientes");
+      cargarAutos("pendiente");
     }
   }, [autenticado]);
 
@@ -135,7 +151,7 @@ export default function Admin() {
   }
 
   const pestanas = [
-    { id: "pendientes", label: "Pendientes" },
+    { id: "pendiente", label: "Pendientes" },
     { id: "aprobado", label: "Aprobados" },
     { id: "rechazado", label: "Rechazados" },
   ];
