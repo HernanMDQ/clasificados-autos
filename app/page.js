@@ -132,7 +132,7 @@ export default function Home() {
                   color: "#fff",
                   padding: "9px 13px",
                   borderRadius: msg.role === "user" ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
-                  fontSize: 13,
+                  fontSize: 15,
                   maxWidth: "80%",
                   lineHeight: 1.5
                 }}>
@@ -244,7 +244,7 @@ export default function Home() {
       {/* COMO FUNCIONA */}
       <section style={{ padding: "36px 24px", background: "#0d1520" }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16, textAlign: "center" }}>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16, textAlign: "center" }}>
             Como funciona
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
@@ -261,8 +261,8 @@ export default function Home() {
                 textAlign: "center"
               }}>
                 <div style={{ fontSize: 24, marginBottom: 10 }}>{item.icon}</div>
-                <div style={{ color: "#fff", fontSize: 13, fontWeight: 500, marginBottom: 6 }}>{item.title}</div>
-                <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, lineHeight: 1.5 }}>{item.desc}</div>
+                <div style={{ color: "#fff", fontSize: 15, fontWeight: 500, marginBottom: 6 }}>{item.title}</div>
+                <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, lineHeight: 1.5 }}>{item.desc}</div>
               </div>
             ))}
           </div>
