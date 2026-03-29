@@ -30,122 +30,130 @@ export default function Autos() {
 
   useEffect(() => {
     let resultado = autos;
-
-    if (marca.trim()) {
-      resultado = resultado.filter((a) =>
-        a.marca.toLowerCase().includes(marca.toLowerCase())
-      );
-    }
-
-    if (precioMax) {
-      resultado = resultado.filter((a) => a.precio <= parseFloat(precioMax));
-    }
-
-    if (annoMin) {
-      resultado = resultado.filter((a) => a.ano >= parseInt(annoMin));
-    }
-
+    if (marca.trim()) resultado = resultado.filter((a) => a.marca.toLowerCase().includes(marca.toLowerCase()));
+    if (precioMax) resultado = resultado.filter((a) => a.precio <= parseFloat(precioMax));
+    if (annoMin) resultado = resultado.filter((a) => a.ano >= parseInt(annoMin));
     setFiltrados(resultado);
   }, [marca, precioMax, annoMin, autos]);
 
-  const limpiarFiltros = () => {
-    setMarca("");
-    setPrecioMax("");
-    setAnnoMin("");
+  const limpiarFiltros = () => { setMarca(""); setPrecioMax(""); setAnnoMin(""); };
+
+  const inputStyle = {
+    background: "rgba(255,255,255,0.06)",
+    border: "0.5px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "8px 12px",
+    color: "#fff",
+    fontSize: 13,
+    outline: "none",
+    width: "100%"
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Autos disponibles</h1>
-          <Link href="/publicar" className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600">
+    <main style={{ background: "#0d1520", minHeight: "100vh", padding: "32px 24px" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto" }}>
+
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+          <h1 style={{ color: "#fff", fontSize: 24, fontWeight: 500 }}>Autos disponibles</h1>
+          <Link href="/publicar" style={{
+            background: "#ff4500", color: "#fff", padding: "8px 18px",
+            borderRadius: 8, fontSize: 14, fontWeight: 500, textDecoration: "none"
+          }}>
             Publicar auto
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow p-4 mb-6 flex flex-wrap gap-3 items-end">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Marca</label>
-            <input
-              value={marca}
-              onChange={(e) => setMarca(e.target.value)}
-              placeholder="Ej: Toyota"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+        {/* FILTROS */}
+        <div style={{
+          background: "#111c2b",
+          border: "0.5px solid rgba(255,255,255,0.07)",
+          borderRadius: 12,
+          padding: "16px 20px",
+          marginBottom: 24,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 12,
+          alignItems: "flex-end"
+        }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
+            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Marca</label>
+            <input value={marca} onChange={(e) => setMarca(e.target.value)} placeholder="Ej: Toyota" style={inputStyle} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Precio maximo (USD)</label>
-            <input
-              value={precioMax}
-              onChange={(e) => setPrecioMax(e.target.value)}
-              placeholder="Ej: 20000"
-              type="number"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
+            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Precio maximo (USD)</label>
+            <input value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} placeholder="Ej: 20000" type="number" style={inputStyle} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Año minimo</label>
-            <input
-              value={annoMin}
-              onChange={(e) => setAnnoMin(e.target.value)}
-              placeholder="Ej: 2018"
-              type="number"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 120 }}>
+            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Año minimo</label>
+            <input value={annoMin} onChange={(e) => setAnnoMin(e.target.value)} placeholder="Ej: 2018" type="number" style={inputStyle} />
           </div>
-          <button
-            onClick={limpiarFiltros}
-            className="text-sm text-gray-400 hover:text-red-400 pb-2"
-          >
-            Limpiar filtros
+          <button onClick={limpiarFiltros} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", fontSize: 13, cursor: "pointer", paddingBottom: 2 }}>
+            Limpiar
           </button>
-          <p className="text-sm text-gray-400 pb-2">
+          <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, paddingBottom: 2 }}>
             {filtrados.length} resultado{filtrados.length !== 1 ? "s" : ""}
-          </p>
+          </span>
         </div>
 
         {filtrados.length === 0 && (
-          <p className="text-center text-gray-500">No hay autos que coincidan con la busqueda.</p>
+          <p style={{ color: "rgba(255,255,255,0.4)", textAlign: "center", marginTop: 48 }}>
+            No hay autos que coincidan con la busqueda.
+          </p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
           {filtrados.map((auto) => (
-            <div key={auto.id} className="bg-white rounded-2xl shadow overflow-hidden">
+            <div key={auto.id} style={{
+              background: "#131e2e",
+              border: "0.5px solid rgba(255,255,255,0.07)",
+              borderRadius: 12,
+              overflow: "hidden"
+            }}>
               {auto.foto_url ? (
-                <img
-                  src={auto.foto_url}
-                  alt={auto.marca + " " + auto.modelo}
-                  className="w-full h-48 object-cover"
-                />
+                <img src={auto.foto_url} alt={auto.marca + " " + auto.modelo} style={{ width: "100%", height: 180, objectFit: "cover" }} />
               ) : (
-                <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+                <div style={{ width: "100%", height: 180, background: "#1a2740", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.15)", fontSize: 13 }}>
                   Sin foto
                 </div>
               )}
-              <div className="p-4">
-                <h2 className="text-xl font-bold text-gray-800">
+              <div style={{ padding: "14px 16px" }}>
+                <h2 style={{ color: "#fff", fontSize: 16, fontWeight: 500, marginBottom: 4 }}>
                   {auto.marca} {auto.modelo}
                 </h2>
-                <p className="text-gray-500 text-sm mb-2">
+                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 8 }}>
                   {auto.ano} · {auto.kilometros?.toLocaleString()} km
                 </p>
-                <p className="text-blue-600 font-bold text-lg mb-3">
+                <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: 12 }}>
                   USD {auto.precio?.toLocaleString()}
                 </p>
-                <p className="text-gray-600 text-sm mb-4">{auto.descripcion}</p>
-                
-                  <div className="flex flex-col gap-2">
+                {auto.descripcion && (
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5 }}>
+                    {auto.descripcion}
+                  </p>
+                )}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   
                     <a href={`/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-")}
-                    className="block text-center bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600"
+                    style={{
+                      display: "block", textAlign: "center",
+                      background: "rgba(255,69,0,0.1)",
+                      color: "#ff6b35",
+                      border: "0.5px solid rgba(255,69,0,0.25)",
+                      padding: "8px", borderRadius: 8, fontSize: 13, textDecoration: "none"
+                    }}
                   >
                     Ver detalle
                   </a>
                   
                     <a href={"https://wa.me/+54" + auto.telefono}
                     target="_blank"
-                    className="block text-center bg-green-500 text-white py-2 rounded-xl hover:bg-green-600"
+                    style={{
+                      display: "block", textAlign: "center",
+                      background: "rgba(37,211,102,0.1)",
+                      color: "#25d366",
+                      border: "0.5px solid rgba(37,211,102,0.25)",
+                      padding: "8px", borderRadius: 8, fontSize: 13, textDecoration: "none"
+                    }}
                   >
                     Contactar por WhatsApp
                   </a>

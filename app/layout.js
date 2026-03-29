@@ -1,43 +1,60 @@
 import "./globals.css";
+import BotonWA from "./components/BotonWA";
 
 export const metadata = {
-  title: "Clasificados IA",
-  description: "Buscá tu próximo auto con inteligencia artificial",
+  title: "Autos Concordia",
+  description: "Encontra tu proximo auto en Concordia con inteligencia artificial",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className="overflow-x-hidden">
-        <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-          <a href="/" className="text-xl font-bold text-blue-600">
-            Clasificados IA
+        <nav style={{
+          background: "#0d1520",
+          borderBottom: "0.5px solid rgba(255,255,255,0.08)",
+          padding: "14px 24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}>
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <div style={{
+              width: 36, height: 36,
+              background: "#ff4500",
+              borderRadius: 8,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 18
+            }}>🚗</div>
+            <span style={{ color: "#fff", fontSize: 17, fontWeight: 500 }}>
+              Autos <span style={{ color: "#ff6b35" }}>Concordia</span>
+            </span>
           </a>
-          <div className="flex gap-4">
-            <a href="/" className="text-gray-600 hover:text-blue-500">
+          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+            <a href="/" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>
               Buscar
             </a>
-            <a href="/autos" className="text-gray-600 hover:text-blue-500">
+            <a href="/autos" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>
               Autos
             </a>
-            <a href="/publicar" className="bg-blue-500 text-white px-4 py-1 rounded-xl hover:bg-blue-600">
+            <a href="/publicar" style={{
+              background: "#ff4500",
+              color: "#fff",
+              padding: "7px 16px",
+              borderRadius: 8,
+              fontSize: 14,
+              fontWeight: 500,
+              textDecoration: "none"
+            }}>
               Publicar
             </a>
           </div>
         </nav>
-        {children}
-        
-          <a href="https://wa.me/+543454045864"
-          target="_blank"
-          className="fixed bottom-6 right-6 flex items-center gap-2 group z-50"
-        >
-          <span className="bg-white text-green-600 text-sm font-medium px-3 py-1 rounded-xl shadow opacity-0 group-hover:opacity-100 transition-opacity">
-            Soporte Humano
-          </span>
-          <div className="bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg text-2xl">
-            💬
-          </div>
-        </a>
+                {children}
+        <BotonWA />
       </body>
     </html>
   );

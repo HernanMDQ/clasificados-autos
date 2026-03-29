@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -8,22 +9,38 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
+  const [ultimosAutos, setUltimosAutos] = useState([]);
 
   useEffect(() => {
     if (messages.length > 1) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, loading]);
+  useEffect(() => {
+    const cargarAutos = async () => {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      );
+      const { data } = await supabase
+        .from("autos")
+        .select("*")
+        .eq("estado", "aprobado")
+        .order("created_at", { ascending: false })
+        .limit(3);
+      setUltimosAutos(data || []);
+    };
+    cargarAutos();
+  }, []);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
     const userMessage = { role: "user", text: input };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setInput("");
     setLoading(true);
-
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,7 +52,6 @@ export default function Home() {
         }))
       }),
     });
-
     const data = await res.json();
     setMessages((prev) => [...prev, { role: "assistant", text: data.reply }]);
     setLoading(false);
@@ -52,80 +68,136 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-100">
+    <main style={{ background: "#0d1520", minHeight: "100vh" }}>
 
-      <section className="bg-blue-600 text-white py-16 px-4 text-center">
-        <h1 className="text-4xl font-bold mb-4">Encontra tu proximo auto con IA</h1>
-        <p className="text-blue-100 text-lg mb-6 max-w-xl mx-auto">
+      {/* HERO */}
+      <section style={{
+        background: "#111c2b",
+        padding: "52px 24px 44px",
+        textAlign: "center",
+        borderBottom: "0.5px solid rgba(255,255,255,0.06)"
+      }}>
+        <div style={{
+          display: "inline-block",
+          background: "rgba(255,69,0,0.12)",
+          color: "#ff6b35",
+          border: "0.5px solid rgba(255,69,0,0.3)",
+          padding: "4px 14px",
+          borderRadius: 99,
+          fontSize: 12,
+          marginBottom: 20
+        }}>
+          Busqueda con inteligencia artificial
+        </div>
+        <h1 style={{ color: "#fff", fontSize: 30, fontWeight: 500, lineHeight: 1.25, marginBottom: 12, letterSpacing: -0.5 }}>
+          Encontra tu proximo auto<br />en <span style={{ color: "#ff4500" }}>Concordia</span>
+        </h1>
+        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.65 }}>
           Contanos que estas buscando y nuestra IA te ayuda a encontrar el auto ideal entre todos los anuncios disponibles.
         </p>
-        <div className="flex justify-center gap-3 flex-wrap">
-          <a href="/autos" className="bg-white text-blue-600 font-semibold px-6 py-2 rounded-xl hover:bg-blue-50">
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 28 }}>
+          <a href="/autos" style={{ background: "#ff4500", color: "#fff", padding: "10px 22px", borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
             Ver todos los autos
           </a>
-          <a href="/publicar" className="bg-blue-500 border border-white text-white font-semibold px-6 py-2 rounded-xl hover:bg-blue-700">
+          <a href="/publicar" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.8)", padding: "10px 22px", borderRadius: 10, fontSize: 14, border: "0.5px solid rgba(255,255,255,0.12)", textDecoration: "none" }}>
             Publicar mi auto
           </a>
         </div>
-      </section>
 
-      <section className="max-w-2xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-gray-800">Buscar con IA</h2>
+        {/* CHAT */}
+        <div style={{
+          background: "rgba(255,255,255,0.03)",
+          border: "0.5px solid rgba(255,255,255,0.09)",
+          borderRadius: 14,
+          padding: 16,
+          maxWidth: 480,
+          margin: "0 auto",
+          textAlign: "left"
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>Asistente IA</span>
             <button
               onClick={() => setMessages([{ role: "assistant", text: "Hola! Soy tu asistente de autos. Que tipo de auto estas buscando?" }])}
-              className="text-sm text-gray-400 hover:text-red-400"
+              style={{ color: "rgba(255,255,255,0.3)", fontSize: 12, background: "none", border: "none", cursor: "pointer" }}
             >
               Nueva conversacion
             </button>
           </div>
-
-          <div className="bg-gray-50 rounded-xl p-4 h-64 overflow-y-auto mb-4 flex flex-col gap-3">
+          <div style={{ height: 200, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-4 py-2 rounded-2xl max-w-xs text-sm ${
-                  msg.role === "user"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                }`}>
-                  {msg.text}
+              <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                <div style={{
+                  background: msg.role === "user" ? "#ff4500" : "rgba(30,58,79,0.6)",
+                  border: msg.role === "user" ? "none" : "0.5px solid rgba(255,255,255,0.08)",
+                  color: "#fff",
+                  padding: "9px 13px",
+                  borderRadius: msg.role === "user" ? "12px 12px 4px 12px" : "12px 12px 12px 4px",
+                  fontSize: 13,
+                  maxWidth: "80%",
+                  lineHeight: 1.5
+                }}>
+                  <ReactMarkdown
+  components={{
+    a: ({ href, children }) => (
+      <a href={href} style={{ color: "#ff6b35", textDecoration: "underline" }} target="_blank">
+        {children}
+      </a>
+    )
+  }}
+>
+  {msg.text}
+</ReactMarkdown>
                 </div>
               </div>
             ))}
             {loading && (
-              <div className="flex justify-start">
-                <div className="px-4 py-2 rounded-2xl bg-gray-200 text-gray-500 text-sm">
+              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                <div style={{ background: "rgba(30,58,79,0.6)", color: "rgba(255,255,255,0.5)", padding: "9px 13px", borderRadius: "12px 12px 12px 4px", fontSize: 13 }}>
                   Escribiendo...
                 </div>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
-
-          <div className="flex gap-2 mb-4">
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ej: busco una pickup hasta $20.000..."
-              className="flex-1 border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              style={{
+                flex: 1,
+                background: "rgba(255,255,255,0.06)",
+                border: "0.5px solid rgba(255,255,255,0.12)",
+                borderRadius: 8,
+                padding: "9px 12px",
+                color: "#fff",
+                fontSize: 13,
+                outline: "none"
+              }}
             />
             <button
               onClick={sendMessage}
-              className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600"
+              style={{ background: "#ff4500", color: "#fff", borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 500, border: "none", cursor: "pointer" }}
             >
               Enviar
             </button>
           </div>
-
-          <div className="flex flex-wrap gap-2">
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {ejemplos.map((ej, i) => (
               <button
                 key={i}
                 onClick={() => setInput(ej)}
-                className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full hover:bg-blue-50 hover:text-blue-600"
+                style={{
+                  background: "rgba(255,69,0,0.08)",
+                  color: "#ff6b35",
+                  border: "0.5px solid rgba(255,69,0,0.2)",
+                  borderRadius: 99,
+                  padding: "4px 12px",
+                  fontSize: 12,
+                  cursor: "pointer"
+                }}
               >
                 {ej}
               </button>
@@ -133,24 +205,66 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section className="max-w-4xl mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">Como funciona</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl shadow p-6 text-center">
-            <p className="text-4xl mb-3">🔍</p>
-            <h3 className="font-bold text-gray-800 mb-2">Busca con IA</h3>
-            <p className="text-gray-500 text-sm">Contanos que auto necesitas en lenguaje natural y la IA busca por vos.</p>
+      {/* ULTIMOS AUTOS *
+      {ultimosAutos.length > 0 && (
+        <section style={{ padding: "0 24px 36px", background: "#0d1520" }}>
+          <div style={{ maxWidth: 720, margin: "0 auto" }}>
+            <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16, textAlign: "center" }}>
+              Ultimos anuncios
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+              {ultimosAutos.map((auto) => (
+                
+                  <a key={auto.id}
+                   href={`/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-")}
+                  style={{ textDecoration: "none" }}
+                >
+                  <div style={{ background: "#131e2e", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 12, overflow: "hidden" }}>
+                    {auto.foto_url ? (
+                      <img src={auto.foto_url} alt={auto.marca + " " + auto.modelo} style={{ width: "100%", height: 90, objectFit: "cover" }} />
+                    ) : (
+                      <div style={{ width: "100%", height: 90, background: "#1a2740", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.15)", fontSize: 11 }}>
+                        Sin foto
+                      </div>
+                    )}
+                    <div style={{ padding: "10px 12px" }}>
+                      <p style={{ color: "#fff", fontSize: 13, fontWeight: 500, marginBottom: 3 }}>{auto.marca} {auto.modelo}</p>
+                      <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginBottom: 6 }}>{auto.ano} · {auto.kilometros?.toLocaleString()} km</p>
+                      <p style={{ color: "#ff6b35", fontSize: 14, fontWeight: 500 }}>USD {auto.precio?.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
-          <div className="bg-white rounded-2xl shadow p-6 text-center">
-            <p className="text-4xl mb-3">📋</p>
-            <h3 className="font-bold text-gray-800 mb-2">Explora el listado</h3>
-            <p className="text-gray-500 text-sm">Filtra por marca, precio y año para encontrar exactamente lo que buscas.</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow p-6 text-center">
-            <p className="text-4xl mb-3">💬</p>
-            <h3 className="font-bold text-gray-800 mb-2">Contacta por WhatsApp</h3>
-            <p className="text-gray-500 text-sm">Conectate directamente con el vendedor con un solo clic.</p>
+        </section>
+      )}
+      /}
+      
+      {/* COMO FUNCIONA */}
+      <section style={{ padding: "36px 24px", background: "#0d1520" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16, textAlign: "center" }}>
+            Como funciona
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+            {[
+              { icon: "🔍", title: "Busca con IA", desc: "Contanos que auto necesitas en lenguaje natural" },
+              { icon: "📋", title: "Explora el listado", desc: "Filtra por marca, precio y año facilmente" },
+              { icon: "💬", title: "Contacta por WhatsApp", desc: "Conectate con el vendedor con un clic" },
+            ].map((item, i) => (
+              <div key={i} style={{
+                background: "#111c2b",
+                border: "0.5px solid rgba(255,255,255,0.07)",
+                borderRadius: 12,
+                padding: "16px 14px",
+                textAlign: "center"
+              }}>
+                <div style={{ fontSize: 24, marginBottom: 10 }}>{item.icon}</div>
+                <div style={{ color: "#fff", fontSize: 13, fontWeight: 500, marginBottom: 6 }}>{item.title}</div>
+                <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, lineHeight: 1.5 }}>{item.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
