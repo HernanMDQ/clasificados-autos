@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
 
@@ -9,11 +10,12 @@ const supabase = createClient(
 );
 
 export default function Autos() {
+  const searchParams = useSearchParams();
   const [autos, setAutos] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
-  const [marca, setMarca] = useState("");
-  const [precioMax, setPrecioMax] = useState("");
-  const [annoMin, setAnnoMin] = useState("");
+  const [marca, setMarca] = useState(searchParams.get("marca") || "");
+  const [precioMax, setPrecioMax] = useState(searchParams.get("precioMax") || "");
+  const [annoMin, setAnnoMin] = useState(searchParams.get("annoMin") || "");
 
   useEffect(() => {
     const cargar = async () => {

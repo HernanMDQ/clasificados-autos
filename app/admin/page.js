@@ -10,6 +10,250 @@ const supabase = createClient(
 const PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 const USER = process.env.NEXT_PUBLIC_ADMIN_USER;
 
+const s = {
+  page: {
+    minHeight: "calc(100vh - 65px)",
+    background: "#0d1520",
+    padding: "32px 16px",
+  },
+  container: { maxWidth: 900, margin: "0 auto" },
+  title: { color: "#fff", fontSize: 26, fontWeight: 700, marginBottom: 24 },
+
+  // Login
+  loginWrap: {
+    minHeight: "calc(100vh - 65px)",
+    background: "#0d1520",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  loginCard: {
+    background: "#131f30",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 16,
+    padding: 32,
+    width: "100%",
+    maxWidth: 360,
+  },
+  loginTitle: { color: "#fff", fontSize: 20, fontWeight: 700, textAlign: "center", marginBottom: 24 },
+  input: {
+    width: "100%",
+    background: "#0d1520",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 10,
+    padding: "10px 14px",
+    color: "#fff",
+    fontSize: 14,
+    marginBottom: 12,
+    outline: "none",
+    boxSizing: "border-box",
+  },
+  loginBtn: {
+    width: "100%",
+    background: "#ff4500",
+    color: "#fff",
+    border: "none",
+    borderRadius: 10,
+    padding: "10px 0",
+    fontSize: 15,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  errorMsg: { color: "#f87171", fontSize: 13, marginBottom: 12 },
+
+  // Tabs
+  tabs: { display: "flex", gap: 8, marginBottom: 20 },
+  tabActive: {
+    background: "#ff4500",
+    color: "#fff",
+    border: "none",
+    borderRadius: 8,
+    padding: "8px 18px",
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  tabInactive: {
+    background: "#131f30",
+    color: "rgba(255,255,255,0.55)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 8,
+    padding: "8px 18px",
+    fontSize: 14,
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+
+  // Filters
+  filterBar: {
+    background: "#131f30",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 12,
+    padding: "16px 20px",
+    marginBottom: 20,
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 12,
+    alignItems: "flex-end",
+  },
+  filterGroup: { display: "flex", flexDirection: "column", gap: 4 },
+  filterLabel: { color: "rgba(255,255,255,0.4)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 },
+  filterInput: {
+    background: "#0d1520",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "8px 12px",
+    color: "#fff",
+    fontSize: 13,
+    outline: "none",
+    width: 130,
+  },
+  clearBtn: {
+    background: "none",
+    border: "none",
+    color: "rgba(255,255,255,0.35)",
+    fontSize: 13,
+    cursor: "pointer",
+    padding: "8px 0",
+  },
+  resultsCount: { color: "rgba(255,255,255,0.35)", fontSize: 13, padding: "8px 0" },
+
+  // Cards
+  card: {
+    background: "#131f30",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: 14,
+    padding: 16,
+    display: "flex",
+    gap: 14,
+    alignItems: "flex-start",
+    marginBottom: 12,
+  },
+  img: { width: 112, height: 80, objectFit: "cover", borderRadius: 10, flexShrink: 0 },
+  cardTitle: { color: "#fff", fontSize: 16, fontWeight: 700, marginBottom: 4 },
+  cardSub: { color: "rgba(255,255,255,0.45)", fontSize: 13, marginBottom: 4 },
+  cardDesc: { color: "rgba(255,255,255,0.6)", fontSize: 13, marginBottom: 4 },
+  cardMeta: { color: "rgba(255,255,255,0.3)", fontSize: 12, marginBottom: 2 },
+  btnRow: { display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" },
+
+  btnEdit: {
+    background: "rgba(255,255,255,0.08)",
+    color: "rgba(255,255,255,0.7)",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "6px 16px",
+    fontSize: 13,
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+
+  // Modal
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.7)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 100,
+    padding: 16,
+  },
+  modal: {
+    background: "#131f30",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 16,
+    padding: 28,
+    width: "100%",
+    maxWidth: 520,
+    maxHeight: "90vh",
+    overflowY: "auto",
+  },
+  modalTitle: { color: "#fff", fontSize: 18, fontWeight: 700, marginBottom: 20 },
+  modalGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 },
+  modalGroup: { display: "flex", flexDirection: "column", gap: 5 },
+  modalGroupFull: { display: "flex", flexDirection: "column", gap: 5, gridColumn: "1 / -1" },
+  modalLabel: { color: "rgba(255,255,255,0.4)", fontSize: 11, textTransform: "uppercase", letterSpacing: 0.8 },
+  modalInput: {
+    background: "#0d1520",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "9px 12px",
+    color: "#fff",
+    fontSize: 14,
+    outline: "none",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  modalTextarea: {
+    background: "#0d1520",
+    border: "1px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "9px 12px",
+    color: "#fff",
+    fontSize: 14,
+    outline: "none",
+    width: "100%",
+    boxSizing: "border-box",
+    resize: "vertical",
+    minHeight: 90,
+    fontFamily: "inherit",
+  },
+  modalBtnRow: { display: "flex", gap: 10, marginTop: 20, justifyContent: "flex-end" },
+  modalBtnCancel: {
+    background: "rgba(255,255,255,0.07)",
+    color: "rgba(255,255,255,0.6)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 8,
+    padding: "9px 20px",
+    fontSize: 14,
+    cursor: "pointer",
+  },
+  modalBtnSave: {
+    background: "#ff4500",
+    color: "#fff",
+    border: "none",
+    borderRadius: 8,
+    padding: "9px 20px",
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+
+  btnGreen: {
+    background: "#16a34a",
+    color: "#fff",
+    border: "none",
+    borderRadius: 8,
+    padding: "6px 16px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  btnRed: {
+    background: "#dc2626",
+    color: "#fff",
+    border: "none",
+    borderRadius: 8,
+    padding: "6px 16px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  btnYellow: {
+    background: "#d97706",
+    color: "#fff",
+    border: "none",
+    borderRadius: 8,
+    padding: "6px 16px",
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+
+  empty: { color: "rgba(255,255,255,0.35)", fontSize: 15, padding: "24px 0" },
+};
+
 export default function Admin() {
   const [autos, setAutos] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
@@ -22,6 +266,8 @@ export default function Admin() {
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
   const [anno, setAnno] = useState("");
+  const [editando, setEditando] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   const limpiarRechazados = async () => {
     const hace15dias = new Date();
@@ -79,15 +325,52 @@ export default function Admin() {
 
   const eliminar = async (id) => {
     if (!confirm("Seguro que queres eliminar este anuncio?")) return;
-
     const auto = autos.find((a) => a.id === id);
-
     await fetch("/api/eliminar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, foto_url: auto?.foto_url })
+      body: JSON.stringify({ id, foto_url: auto?.foto_url }),
     });
+    cargarAutos(pestana);
+  };
 
+  const abrirEditor = (auto) => {
+    setEditando(auto.id);
+    setEditForm({
+      marca: auto.marca || "",
+      modelo: auto.modelo || "",
+      ano: auto.ano || "",
+      kilometros: auto.kilometros || "",
+      precio: auto.precio || "",
+      descripcion: auto.descripcion || "",
+      telefono: auto.telefono || "",
+    });
+  };
+
+  const guardarEdicion = async () => {
+    const res = await fetch("/api/editar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: editando,
+        datos: {
+          marca: editForm.marca,
+          modelo: editForm.modelo,
+          ano: Number(editForm.ano),
+          kilometros: Number(editForm.kilometros),
+          precio: Number(editForm.precio),
+          descripcion: editForm.descripcion,
+          telefono: editForm.telefono,
+        },
+      }),
+    });
+    const json = await res.json();
+    if (!json.ok) {
+      alert("Error al guardar: " + json.error);
+      return;
+    }
+
+    setEditando(null);
     cargarAutos(pestana);
   };
 
@@ -116,17 +399,15 @@ export default function Admin() {
 
   if (!autenticado) {
     return (
-      <main className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-sm w-full">
-          <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-            Panel de administracion
-          </h1>
+      <main style={s.loginWrap}>
+        <div style={s.loginCard}>
+          <h1 style={s.loginTitle}>Panel de administracion</h1>
           <input
             type="text"
             value={usuario}
             onChange={(e) => setUsuario(e.target.value)}
             placeholder="Usuario"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={s.input}
           />
           <input
             type="password"
@@ -134,13 +415,10 @@ export default function Admin() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             placeholder="Contrasena"
-            className="w-full border border-gray-300 rounded-xl px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={s.input}
           />
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          <button
-            onClick={handleLogin}
-            className="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600"
-          >
+          {error && <p style={s.errorMsg}>{error}</p>}
+          <button onClick={handleLogin} style={s.loginBtn}>
             Ingresar
           </button>
         </div>
@@ -155,149 +433,131 @@ export default function Admin() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Panel de moderacion</h1>
+    <main style={s.page}>
+      <div style={s.container}>
+        <h1 style={s.title}>Panel de moderacion</h1>
 
-        <div className="flex gap-2 mb-6">
+        <div style={s.tabs}>
           {pestanas.map((p) => (
             <button
               key={p.id}
               onClick={() => setPestana(p.id)}
-              className={`px-4 py-2 rounded-xl font-medium ${
-                pestana === p.id
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-50"
-              }`}
+              style={pestana === p.id ? s.tabActive : s.tabInactive}
             >
               {p.label}
             </button>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow p-4 mb-6 flex flex-wrap gap-3 items-end">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Marca</label>
-            <input
-              value={marca}
-              onChange={(e) => setMarca(e.target.value)}
-              placeholder="Ej: Toyota"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+        <div style={s.filterBar}>
+          <div style={s.filterGroup}>
+            <label style={s.filterLabel}>Marca</label>
+            <input value={marca} onChange={(e) => setMarca(e.target.value)} placeholder="Ej: Toyota" style={s.filterInput} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Modelo</label>
-            <input
-              value={modelo}
-              onChange={(e) => setModelo(e.target.value)}
-              placeholder="Ej: Hilux"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+          <div style={s.filterGroup}>
+            <label style={s.filterLabel}>Modelo</label>
+            <input value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ej: Hilux" style={s.filterInput} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs text-gray-500">Año</label>
-            <input
-              value={anno}
-              onChange={(e) => setAnno(e.target.value)}
-              placeholder="Ej: 2020"
-              type="number"
-              className="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+          <div style={s.filterGroup}>
+            <label style={s.filterLabel}>Año</label>
+            <input value={anno} onChange={(e) => setAnno(e.target.value)} placeholder="Ej: 2020" type="number" style={s.filterInput} />
           </div>
-          <button
-            onClick={limpiarFiltros}
-            className="text-sm text-gray-400 hover:text-red-400 pb-2"
-          >
-            Limpiar filtros
-          </button>
-          <p className="text-sm text-gray-400 pb-2">
+          <button onClick={limpiarFiltros} style={s.clearBtn}>Limpiar filtros</button>
+          <span style={s.resultsCount}>
             {filtrados.length} resultado{filtrados.length !== 1 ? "s" : ""}
-          </p>
+          </span>
         </div>
 
-        {loading && <p className="text-gray-500">Cargando...</p>}
+        {loading && <p style={s.empty}>Cargando...</p>}
 
         {!loading && filtrados.length === 0 && (
-          <p className="text-gray-500">No hay anuncios en esta seccion.</p>
+          <p style={s.empty}>No hay anuncios en esta seccion.</p>
         )}
 
-        <div className="flex flex-col gap-4">
+        <div>
           {filtrados.map((auto) => (
-            <div key={auto.id} className="bg-white rounded-2xl shadow p-4 flex gap-4 items-start">
+            <div key={auto.id} style={s.card}>
               {auto.foto_url && (
-                <img
-                  src={auto.foto_url}
-                  alt={auto.marca + " " + auto.modelo}
-                  className="w-28 h-20 object-cover rounded-xl flex-shrink-0"
-                />
+                <img src={auto.foto_url} alt={`${auto.marca} ${auto.modelo}`} style={s.img} />
               )}
-              <div className="flex-1">
-                <h2 className="text-lg font-bold text-gray-800">
-                  {auto.marca} {auto.modelo}
-                </h2>
-                <p className="text-gray-500 text-sm">
+              <div style={{ flex: 1 }}>
+                <h2 style={s.cardTitle}>{auto.marca} {auto.modelo}</h2>
+                <p style={s.cardSub}>
                   {auto.ano} · {auto.kilometros?.toLocaleString()} km · USD {auto.precio?.toLocaleString()}
                 </p>
-                <p className="text-gray-600 text-sm mt-1">{auto.descripcion}</p>
-                <p className="text-gray-400 text-xs mt-1">Tel: {auto.telefono}</p>
-                <p className="text-gray-400 text-xs">
+                <p style={s.cardDesc}>{auto.descripcion}</p>
+                <p style={s.cardMeta}>Tel: {auto.telefono}</p>
+                <p style={s.cardMeta}>
                   Publicado: {new Date(auto.created_at).toLocaleDateString("es-AR")}
                 </p>
-                <div className="flex gap-2 mt-3 flex-wrap">
+                <div style={s.btnRow}>
                   {pestana === "pendiente" && (
                     <>
-                      <button
-                        onClick={() => cambiarEstado(auto.id, "aprobado")}
-                        className="bg-green-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-green-600"
-                      >
-                        Aprobar
-                      </button>
-                      <button
-                        onClick={() => cambiarEstado(auto.id, "rechazado")}
-                        className="bg-red-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-red-600"
-                      >
-                        Rechazar
-                      </button>
+                      <button onClick={() => cambiarEstado(auto.id, "aprobado")} style={s.btnGreen}>Aprobar</button>
+                      <button onClick={() => cambiarEstado(auto.id, "rechazado")} style={s.btnRed}>Rechazar</button>
                     </>
                   )}
                   {pestana === "aprobado" && (
                     <>
-                      <button
-                        onClick={() => cambiarEstado(auto.id, "rechazado")}
-                        className="bg-yellow-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-yellow-600"
-                      >
-                        Desaprobar
-                      </button>
-                      <button
-                        onClick={() => eliminar(auto.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-red-600"
-                      >
-                        Eliminar
-                      </button>
+                      <button onClick={() => cambiarEstado(auto.id, "rechazado")} style={s.btnYellow}>Desaprobar</button>
+                      <button onClick={() => eliminar(auto.id)} style={s.btnRed}>Eliminar</button>
                     </>
                   )}
                   {pestana === "rechazado" && (
                     <>
-                      <button
-                        onClick={() => cambiarEstado(auto.id, "aprobado")}
-                        className="bg-green-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-green-600"
-                      >
-                        Aprobar
-                      </button>
-                      <button
-                        onClick={() => eliminar(auto.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-xl text-sm hover:bg-red-600"
-                      >
-                        Eliminar
-                      </button>
+                      <button onClick={() => cambiarEstado(auto.id, "aprobado")} style={s.btnGreen}>Aprobar</button>
+                      <button onClick={() => eliminar(auto.id)} style={s.btnRed}>Eliminar</button>
                     </>
                   )}
+                  <button onClick={() => abrirEditor(auto)} style={s.btnEdit}>Editar</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {editando && (
+        <div style={s.overlay} onClick={() => setEditando(null)}>
+          <div style={s.modal} onClick={(e) => e.stopPropagation()}>
+            <h2 style={s.modalTitle}>Editar anuncio</h2>
+            <div style={s.modalGrid}>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Marca</label>
+                <input style={s.modalInput} value={editForm.marca} onChange={(e) => setEditForm({ ...editForm, marca: e.target.value })} />
+              </div>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Modelo</label>
+                <input style={s.modalInput} value={editForm.modelo} onChange={(e) => setEditForm({ ...editForm, modelo: e.target.value })} />
+              </div>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Año</label>
+                <input style={s.modalInput} type="number" value={editForm.ano} onChange={(e) => setEditForm({ ...editForm, ano: e.target.value })} />
+              </div>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Kilometros</label>
+                <input style={s.modalInput} type="number" value={editForm.kilometros} onChange={(e) => setEditForm({ ...editForm, kilometros: e.target.value })} />
+              </div>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Precio (USD)</label>
+                <input style={s.modalInput} type="number" value={editForm.precio} onChange={(e) => setEditForm({ ...editForm, precio: e.target.value })} />
+              </div>
+              <div style={s.modalGroup}>
+                <label style={s.modalLabel}>Telefono</label>
+                <input style={s.modalInput} value={editForm.telefono} onChange={(e) => setEditForm({ ...editForm, telefono: e.target.value })} />
+              </div>
+              <div style={s.modalGroupFull}>
+                <label style={s.modalLabel}>Descripcion</label>
+                <textarea style={s.modalTextarea} value={editForm.descripcion} onChange={(e) => setEditForm({ ...editForm, descripcion: e.target.value })} />
+              </div>
+            </div>
+            <div style={s.modalBtnRow}>
+              <button onClick={() => setEditando(null)} style={s.modalBtnCancel}>Cancelar</button>
+              <button onClick={guardarEdicion} style={s.modalBtnSave}>Guardar cambios</button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

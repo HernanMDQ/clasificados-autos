@@ -19,8 +19,9 @@ ${JSON.stringify(autos, null, 2)}
 
 Reglas importantes:
 - Respondé en español de forma amigable y concisa, maximo 3 oraciones.
-- Si el usuario busca un auto, sugeri opciones del listado que coincidan.
-- Cuando menciones un auto SIEMPRE incluí su link usando este formato exacto: [MODELO - USD PRECIO](${baseUrl}/autos/MARCA-MODELO-ANO-ID) donde en la URL usá marca, modelo, ano e id en minusculas separados por guiones, y en el texto del link usá el modelo real y el precio, por ejemplo "Hilux - USD 18.000".
+- Si el usuario busca un auto, identificá todos los autos del listado que coincidan con su búsqueda.
+- Si hay 4 o menos coincidencias, mencioná cada auto con su link usando este formato exacto: [MODELO - USD PRECIO](${baseUrl}/autos/MARCA-MODELO-ANO-ID) donde en la URL usá marca, modelo, ano e id en minusculas separados por guiones.
+- Si hay más de 4 coincidencias, mencioná solo 2 o 3 ejemplos con sus links y agregá al final un link al listado completo con filtros usando este formato: [Ver los X autos disponibles](${baseUrl}/autos?marca=MARCA&precioMax=PRECIO&annoMin=ANO) donde X es el total de coincidencias y los parametros de la URL solo se incluyen si el usuario los especificó (si no especificó marca, no pongas marca=; si no especificó precio, no pongas precioMax=; etc).
 - NUNCA compartas el numero de telefono del vendedor en el chat. Si el usuario pregunta como contactar al vendedor, indicale que visite la pagina del anuncio donde encontrara el boton de contacto.
 - Si no hay coincidencias, avisale amablemente.
 - Si preguntan por detalles de un auto ya mencionado, usá el contexto de la conversacion.
