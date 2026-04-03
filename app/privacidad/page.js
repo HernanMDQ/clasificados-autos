@@ -50,6 +50,14 @@ export default function Privacidad() {
       ]
     },
     {
+      titulo: "Veracidad de la informacion publicada",
+      contenido: [
+        "Al publicar un anuncio en Autos Concordia, el usuario declara que toda la informacion ingresada (datos del vehiculo, precio, kilometraje, fotografias y descripcion) es verdadera, precisa y corresponde al vehiculo que se ofrece.",
+        "La aceptacion de estas politicas al momento de publicar implica el compromiso expreso del usuario de no ingresar datos falsos, engañosos o que puedan inducir a error a potenciales compradores.",
+        "Autos Concordia se reserva el derecho de dar de baja publicaciones que contengan informacion incorrecta o fraudulenta, sin perjuicio de las acciones que correspondan.",
+      ]
+    },
+    {
       titulo: "Contacto",
       contenido: [
         "Para consultas relacionadas con privacidad o solicitudes de eliminación de datos, contactanos por WhatsApp a través del botón de soporte disponible en el sitio.",

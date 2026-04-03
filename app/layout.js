@@ -55,6 +55,24 @@ export default function RootLayout({ children }) {
         </nav>
                 {children}
         <BotonWA />
+        <footer style={{
+          background: "#0a1118",
+          borderTop: "0.5px solid rgba(255,255,255,0.07)",
+          padding: "24px",
+          textAlign: "center",
+        }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 12 }}>
+            <a href="/privacidad" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
+              Politicas de privacidad
+            </a>
+            <a href="/descargo" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
+              Descargo de responsabilidad
+            </a>
+          </div>
+          <p style={{ color: "rgba(255,255,255,0.18)", fontSize: 12 }}>
+            © {new Date().getFullYear()} Autos Concordia. Todos los derechos reservados.
+          </p>
+        </footer>
       </body>
     </html>
   );

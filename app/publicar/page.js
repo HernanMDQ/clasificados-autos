@@ -204,7 +204,11 @@ export default function Publicar() {
                 <a href="/privacidad" style={{ color: "#ff6b35", textDecoration: "none" }}>
                   politicas de privacidad
                 </a>
-                {" "}del sitio
+                {" "}y el{" "}
+                <a href="/descargo" style={{ color: "#ff6b35", textDecoration: "none" }}>
+                  descargo de responsabilidad
+                </a>
+                {". "}Declaro que la informacion ingresada es veridica y corresponde al vehiculo que estoy ofreciendo.
               </label>
             </div>
             <button
