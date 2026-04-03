@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -9,7 +9,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-export default function Autos() {
+function AutosContent() {
   const searchParams = useSearchParams();
   const [autos, setAutos] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
@@ -166,5 +166,13 @@ export default function Autos() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Autos() {
+  return (
+    <Suspense>
+      <AutosContent />
+    </Suspense>
   );
 }
