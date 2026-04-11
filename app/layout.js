@@ -62,6 +62,9 @@ export default function RootLayout({ children }) {
           textAlign: "center",
         }}>
           <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", marginBottom: 12 }}>
+            <a href="/contacto" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
+              Contacto
+            </a>
             <a href="/privacidad" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
               Politicas de privacidad
             </a>
