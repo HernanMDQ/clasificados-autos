@@ -137,7 +137,7 @@ export default function Contacto() {
               <h3 style={{ color: "#fff", fontSize: 15, fontWeight: 500, marginBottom: 16 }}>Preguntas frecuentes</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {[
-                  { p: "¿Cuánto cuesta publicar mi auto?", r: "La publicación es completamente gratuita." },
+                  { p: "¿Cuánto cuesta publicar mi auto?", r: "La publicación es completamente gratuita para particulares." },
                   { p: "¿Cuánto tarda en aparecer mi anuncio?", r: "Revisamos cada anuncio antes de publicarlo. Suele estar disponible en pocas horas." },
                   { p: "¿Cómo contacto al vendedor?", r: "Desde la ficha de cada auto encontrás un botón para comunicarte directamente por WhatsApp." },
                 ].map((faq, i) => (

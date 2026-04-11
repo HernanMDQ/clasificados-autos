@@ -7,7 +7,7 @@ const faqs = [
     items: [
       {
         p: "¿Cuánto cuesta publicar mi auto?",
-        r: "La publicación es completamente gratuita. No cobramos comisión ni ningún tipo de cargo.",
+        r: "La publicación es completamente gratuita para particulares. No cobramos comisión ni ningún tipo de cargo.",
       },
       {
         p: "¿Cuánto tarda en aparecer mi anuncio?",
