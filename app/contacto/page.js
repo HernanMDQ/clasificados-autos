@@ -133,10 +133,23 @@ export default function Contacto() {
               </a>
             </div>
 
-            <div style={{ background: "#111c2b", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "20px 24px" }}>
-              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, lineHeight: 1.6 }}>
-                También podés escribirnos por correo electrónico a través del formulario y te responderemos a la brevedad.
-              </p>
+            <div style={{ background: "#111c2b", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "24px" }}>
+              <h3 style={{ color: "#fff", fontSize: 15, fontWeight: 500, marginBottom: 16 }}>Preguntas frecuentes</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                {[
+                  { p: "¿Cuánto cuesta publicar mi auto?", r: "La publicación es completamente gratuita." },
+                  { p: "¿Cuánto tarda en aparecer mi anuncio?", r: "Revisamos cada anuncio antes de publicarlo. Suele estar disponible en pocas horas." },
+                  { p: "¿Cómo contacto al vendedor?", r: "Desde la ficha de cada auto encontrás un botón para comunicarte directamente por WhatsApp." },
+                ].map((faq, i) => (
+                  <div key={i}>
+                    <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontWeight: 500, marginBottom: 3 }}>{faq.p}</p>
+                    <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, lineHeight: 1.5 }}>{faq.r}</p>
+                  </div>
+                ))}
+              </div>
+              <a href="/faqs" style={{ display: "inline-block", marginTop: 16, color: "#ff6b35", fontSize: 13, textDecoration: "none" }}>
+                Ver todas las preguntas frecuentes →
+              </a>
             </div>
           </div>
 
