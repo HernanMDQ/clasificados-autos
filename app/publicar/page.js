@@ -7,7 +7,9 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-const LABELS = ["Frente (obligatoria)", "Lateral (opcional)", "Trasera (opcional)"];
+const LABELS = ["Frente *", "Lateral", "Trasera"];
+const TIPOS_PERMITIDOS = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+const TIPOS_LEGIBLES = "JPG, PNG, WEBP o HEIC";
 
 export default function Publicar() {
   const [form, setForm] = useState({
@@ -25,6 +27,14 @@ export default function Publicar() {
   };
 
   const handleFoto = (index, archivo) => {
+    if (archivo && !TIPOS_PERMITIDOS.includes(archivo.type)) {
+      setErrorMsg(`Tipo de archivo no permitido. Usá ${TIPOS_LEGIBLES}.`);
+      return;
+    }
+    if (archivo && archivo.size > 1 * 1024 * 1024) {
+      setErrorMsg(`La imagen "${archivo.name}" supera el límite de 1MB.`);
+      return;
+    }
     const nuevas = [...fotos];
     nuevas[index] = archivo;
     setFotos(nuevas);
@@ -52,14 +62,6 @@ export default function Publicar() {
       setErrorMsg("Por favor agrega al menos la foto de frente del auto");
       return;
     }
-    const fotosSeleccionadas = fotos.filter(Boolean);
-    for (const f of fotosSeleccionadas) {
-      if (f.size > 1 * 1024 * 1024) {
-        setErrorMsg(`La imagen "${f.name}" supera el limite de 1MB`);
-        return;
-      }
-    }
-
     const { data: autoExistente } = await supabase
       .from("autos")
       .select("id")
@@ -207,13 +209,12 @@ export default function Publicar() {
                           ✕
                         </button>
                       )}
-                      <input type="file" accept="image/*" onChange={(e) => handleFoto(i, e.target.files[0] || null)} style={{ display: "none" }} />
+                      <input type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" onChange={(e) => handleFoto(i, e.target.files[0] || null)} style={{ display: "none" }} />
                     </label>
                   </div>
                 ))}
               </div>
-              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* Cada imagen no puede superar 1MB</p>
-              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 4 }}>Recomendamos: frente, lateral y trasera del vehículo</p>
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* Cada imagen no puede superar 1MB. Formatos permitidos: JPG, PNG, WEBP, HEIC</p>
             </div>
 
             {errorMsg && (
