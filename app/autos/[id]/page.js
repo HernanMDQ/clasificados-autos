@@ -12,6 +12,7 @@ export default function FichaAuto() {
   const params = useParams();
   const [auto, setAuto] = useState(null);
   const [cargado, setCargado] = useState(false);
+  const [fotoActiva, setFotoActiva] = useState(0);
   const [popup, setPopup] = useState(false);
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function FichaAuto() {
     </main>
   );
 
+  const fotos = [auto.foto_url, auto.foto_url_2, auto.foto_url_3].filter(Boolean);
   const slug = `${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-");
   const urlCompartir = `https://wa.me/?text=Mira este auto: ${auto.marca} ${auto.modelo} ${auto.ano} - USD ${auto.precio?.toLocaleString()} - ${process.env.NEXT_PUBLIC_SITE_URL}/autos/${slug}`;
 
@@ -48,16 +50,39 @@ export default function FichaAuto() {
         </a>
         <div style={{ background: "#111c2b", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 16, overflow: "hidden" }}>
 
-          {auto.foto_url && (
-            <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setPopup(true)}>
-              <img src={auto.foto_url} alt={auto.marca + " " + auto.modelo} style={{ width: "100%", height: 300, objectFit: "cover" }} />
-              <div style={{
-                position: "absolute", bottom: 10, right: 10,
-                background: "rgba(0,0,0,0.5)", color: "#fff",
-                fontSize: 11, padding: "4px 10px", borderRadius: 6
-              }}>
-                Ver foto completa
+          {fotos.length > 0 && (
+            <div>
+              <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setPopup(true)}>
+                <img src={fotos[fotoActiva]} alt={auto.marca + " " + auto.modelo} style={{ width: "100%", height: 300, objectFit: "cover" }} />
+                <div style={{
+                  position: "absolute", bottom: 10, right: 10,
+                  background: "rgba(0,0,0,0.5)", color: "#fff",
+                  fontSize: 11, padding: "4px 10px", borderRadius: 6
+                }}>
+                  Ver foto completa
+                </div>
+                {fotos.length > 1 && (
+                  <div style={{ position: "absolute", bottom: 10, left: 10, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 11, padding: "4px 10px", borderRadius: 6 }}>
+                    {fotoActiva + 1} / {fotos.length}
+                  </div>
+                )}
               </div>
+              {fotos.length > 1 && (
+                <div style={{ display: "flex", gap: 6, padding: "8px 8px 0" }}>
+                  {fotos.map((url, i) => (
+                    <img
+                      key={i}
+                      src={url}
+                      onClick={() => setFotoActiva(i)}
+                      style={{
+                        width: 72, height: 52, objectFit: "cover", borderRadius: 6, cursor: "pointer",
+                        border: fotoActiva === i ? "2px solid #ff4500" : "2px solid transparent",
+                        opacity: fotoActiva === i ? 1 : 0.55,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -107,15 +132,22 @@ export default function FichaAuto() {
       {popup && (
         <div
           onClick={() => setPopup(false)}
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, cursor: "zoom-out", padding: 24 }}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 24 }}
         >
-          <img src={auto.foto_url} alt="foto completa" style={{ maxWidth: "100%", maxHeight: "90vh", objectFit: "contain", borderRadius: 8 }} />
-          <button
-            onClick={() => setPopup(false)}
-            style={{ position: "fixed", top: 20, right: 24, background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", fontSize: 20, width: 36, height: 36, borderRadius: "50%", cursor: "pointer" }}
-          >
+          <img src={fotos[fotoActiva]} alt="foto completa" style={{ maxWidth: "100%", maxHeight: "90vh", objectFit: "contain", borderRadius: 8 }} />
+          <button onClick={() => setPopup(false)} style={{ position: "fixed", top: 20, right: 24, background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", fontSize: 20, width: 36, height: 36, borderRadius: "50%", cursor: "pointer" }}>
             ✕
           </button>
+          {fotos.length > 1 && fotoActiva > 0 && (
+            <button onClick={(e) => { e.stopPropagation(); setFotoActiva(fotoActiva - 1); }} style={{ position: "fixed", left: 20, background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", fontSize: 24, width: 44, height: 44, borderRadius: "50%", cursor: "pointer" }}>
+              ‹
+            </button>
+          )}
+          {fotos.length > 1 && fotoActiva < fotos.length - 1 && (
+            <button onClick={(e) => { e.stopPropagation(); setFotoActiva(fotoActiva + 1); }} style={{ position: "fixed", right: 20, background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", fontSize: 24, width: 44, height: 44, borderRadius: "50%", cursor: "pointer" }}>
+              ›
+            </button>
+          )}
         </div>
       )}
     </main>

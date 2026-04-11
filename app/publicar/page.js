@@ -7,11 +7,13 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+const LABELS = ["Frente (obligatoria)", "Lateral (opcional)", "Trasera (opcional)"];
+
 export default function Publicar() {
   const [form, setForm] = useState({
     marca: "", modelo: "", anno: "", km: "", precio: "", telefono: "", descripcion: ""
   });
-  const [foto, setFoto] = useState(null);
+  const [fotos, setFotos] = useState([null, null, null]);
   const [loading, setLoading] = useState(false);
   const [exito, setExito] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -22,23 +24,40 @@ export default function Publicar() {
     setErrorMsg("");
   };
 
+  const handleFoto = (index, archivo) => {
+    const nuevas = [...fotos];
+    nuevas[index] = archivo;
+    setFotos(nuevas);
+    setErrorMsg("");
+  };
+
+  const subirFoto = async (foto) => {
+    const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + foto.name;
+    const { error } = await supabase.storage.from("fotos-autos").upload(fileName, foto);
+    if (error) throw error;
+    const { data } = supabase.storage.from("fotos-autos").getPublicUrl(fileName);
+    return data.publicUrl;
+  };
+
   const handleSubmit = async () => {
     if (!aceptaTerminos) {
       setErrorMsg("Debes aceptar las politicas de privacidad para continuar");
       return;
     }
-
     if (!form.marca || !form.modelo || !form.anno || !form.km || !form.precio || !form.telefono) {
       setErrorMsg("Por favor completa todos los campos obligatorios");
       return;
     }
-    if (!foto) {
-      setErrorMsg("Por favor agrega una foto del auto");
+    if (!fotos[0]) {
+      setErrorMsg("Por favor agrega al menos la foto de frente del auto");
       return;
     }
-    if (foto.size > 1 * 1024 * 1024) {
-      setErrorMsg("La foto no puede pesar mas de 1MB");
-      return;
+    const fotosSeleccionadas = fotos.filter(Boolean);
+    for (const f of fotosSeleccionadas) {
+      if (f.size > 1 * 1024 * 1024) {
+        setErrorMsg(`La imagen "${f.name}" supera el limite de 1MB`);
+        return;
+      }
     }
 
     const { data: autoExistente } = await supabase
@@ -55,20 +74,18 @@ export default function Publicar() {
 
     setLoading(true);
     try {
-      let foto_url = "";
-      if (foto) {
-        const fileName = Date.now() + "-" + foto.name;
-        const { error: uploadError } = await supabase.storage.from("fotos-autos").upload(fileName, foto);
-        if (uploadError) throw uploadError;
-        const { data: urlData } = supabase.storage.from("fotos-autos").getPublicUrl(fileName);
-        foto_url = urlData.publicUrl;
-      }
+      const urls = await Promise.all(
+        fotos.map((f) => (f ? subirFoto(f) : Promise.resolve(null)))
+      );
 
       const { error } = await supabase.from("autos").insert([{
         marca: form.marca, modelo: form.modelo,
         ano: parseInt(form.anno), kilometros: parseInt(form.km),
         precio: parseFloat(form.precio),
-        telefono: form.telefono, descripcion: form.descripcion, foto_url
+        telefono: form.telefono, descripcion: form.descripcion,
+        foto_url: urls[0],
+        foto_url_2: urls[1] || null,
+        foto_url_3: urls[2] || null,
       }]);
 
       if (error) throw error;
@@ -158,27 +175,45 @@ export default function Publicar() {
               <label style={labelStyle}>Descripcion (opcional)</label>
               <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Informacion adicional del auto..." rows={3} style={{ ...inputStyle, resize: "vertical" }} />
             </div>
+
             <div>
-              <label style={labelStyle}>Foto del auto *</label>
-              <label style={{
-                display: "flex", alignItems: "center", gap: 12,
-                background: "rgba(255,255,255,0.06)",
-                border: "0.5px solid rgba(255,255,255,0.12)",
-                borderRadius: 8, padding: "10px 14px", cursor: "pointer"
-              }}>
-                <span style={{
-                  background: "#ff4500", color: "#fff",
-                  padding: "5px 14px", borderRadius: 6,
-                  fontSize: 13, fontWeight: 500, whiteSpace: "nowrap"
-                }}>
-                  Seleccionar foto
-                </span>
-                <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {foto ? foto.name : "Ningun archivo seleccionado"}
-                </span>
-                <input type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} style={{ display: "none" }} />
-              </label>
-              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* La imagen no puede superar 1MB</p>
+              <label style={labelStyle}>Fotos del auto (hasta 3)</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {fotos.map((foto, i) => (
+                  <div key={i}>
+                    <label style={{
+                      display: "flex", alignItems: "center", gap: 12,
+                      background: "rgba(255,255,255,0.06)",
+                      border: foto ? "0.5px solid rgba(255,69,0,0.4)" : "0.5px solid rgba(255,255,255,0.12)",
+                      borderRadius: 8, padding: "10px 14px", cursor: "pointer"
+                    }}>
+                      <span style={{
+                        background: foto ? "#ff4500" : "rgba(255,255,255,0.1)",
+                        color: "#fff",
+                        padding: "5px 14px", borderRadius: 6,
+                        fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", flexShrink: 0
+                      }}>
+                        {LABELS[i]}
+                      </span>
+                      <span style={{ color: foto ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {foto ? foto.name : "Sin archivo"}
+                      </span>
+                      {foto && (
+                        <button
+                          type="button"
+                          onClick={(e) => { e.preventDefault(); handleFoto(i, null); }}
+                          style={{ marginLeft: "auto", background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 16, flexShrink: 0 }}
+                        >
+                          ✕
+                        </button>
+                      )}
+                      <input type="file" accept="image/*" onChange={(e) => handleFoto(i, e.target.files[0] || null)} style={{ display: "none" }} />
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* Cada imagen no puede superar 1MB</p>
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 4 }}>Recomendamos: frente, lateral y trasera del vehículo</p>
             </div>
 
             {errorMsg && (
@@ -191,7 +226,7 @@ export default function Publicar() {
                 {errorMsg}
               </div>
             )}
-<div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
               <input
                 type="checkbox"
                 id="terminos"
@@ -201,13 +236,9 @@ export default function Publicar() {
               />
               <label htmlFor="terminos" style={{ color: "rgba(255,255,255,0.45)", fontSize: 13, lineHeight: 1.5, cursor: "pointer" }}>
                 Acepto las{" "}
-                <a href="/privacidad" style={{ color: "#ff6b35", textDecoration: "none" }}>
-                  politicas de privacidad
-                </a>
+                <a href="/privacidad" style={{ color: "#ff6b35", textDecoration: "none" }}>politicas de privacidad</a>
                 {" "}y el{" "}
-                <a href="/descargo" style={{ color: "#ff6b35", textDecoration: "none" }}>
-                  descargo de responsabilidad
-                </a>
+                <a href="/descargo" style={{ color: "#ff6b35", textDecoration: "none" }}>descargo de responsabilidad</a>
                 {". "}Declaro que la informacion ingresada es veridica y corresponde al vehiculo que estoy ofreciendo.
               </label>
             </div>
