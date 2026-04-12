@@ -268,6 +268,7 @@ export default function Admin() {
   const [anno, setAnno] = useState("");
   const [editando, setEditando] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [editFotos, setEditFotos] = useState({ foto_url: null, foto_url_2: null, foto_url_3: null });
 
   const limpiarRechazados = async () => {
     const hace30dias = new Date();
@@ -350,32 +351,53 @@ export default function Admin() {
       precio: auto.precio || "",
       descripcion: auto.descripcion || "",
       telefono: auto.telefono || "",
+      foto_url: auto.foto_url || null,
+      foto_url_2: auto.foto_url_2 || null,
+      foto_url_3: auto.foto_url_3 || null,
     });
+    setEditFotos({ foto_url: null, foto_url_2: null, foto_url_3: null });
+  };
+
+  const subirFotoAdmin = async (archivo) => {
+    const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + archivo.name;
+    const { error } = await supabase.storage.from("fotos-autos").upload(fileName, archivo);
+    if (error) throw error;
+    const { data } = supabase.storage.from("fotos-autos").getPublicUrl(fileName);
+    return data.publicUrl;
   };
 
   const guardarEdicion = async () => {
+    const datos = {
+      marca: editForm.marca,
+      modelo: editForm.modelo,
+      ano: Number(editForm.ano),
+      kilometros: Number(editForm.kilometros),
+      precio: Number(editForm.precio),
+      descripcion: editForm.descripcion,
+      telefono: editForm.telefono,
+    };
+
+    for (const campo of ["foto_url", "foto_url_2", "foto_url_3"]) {
+      if (editFotos[campo]) {
+        try {
+          datos[campo] = await subirFotoAdmin(editFotos[campo]);
+        } catch (err) {
+          alert("Error al subir foto: " + err.message);
+          return;
+        }
+      }
+    }
+
     const res = await fetch("/api/editar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: editando,
-        datos: {
-          marca: editForm.marca,
-          modelo: editForm.modelo,
-          ano: Number(editForm.ano),
-          kilometros: Number(editForm.kilometros),
-          precio: Number(editForm.precio),
-          descripcion: editForm.descripcion,
-          telefono: editForm.telefono,
-        },
-      }),
+      body: JSON.stringify({ id: editando, datos }),
     });
     const json = await res.json();
     if (!json.ok) {
       alert("Error al guardar: " + json.error);
       return;
     }
-
     setEditando(null);
     cargarAutos(pestana);
   };
@@ -575,6 +597,39 @@ export default function Admin() {
               <div style={s.modalGroupFull}>
                 <label style={s.modalLabel}>Descripcion</label>
                 <textarea style={s.modalTextarea} value={editForm.descripcion} onChange={(e) => setEditForm({ ...editForm, descripcion: e.target.value })} />
+              </div>
+
+              <div style={s.modalGroupFull}>
+                <label style={s.modalLabel}>Fotos</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { campo: "foto_url", label: "Frente" },
+                    { campo: "foto_url_2", label: "Lateral" },
+                    { campo: "foto_url_3", label: "Trasera" },
+                  ].map(({ campo, label }) => (
+                    <div key={campo} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      {editForm[campo] ? (
+                        <img src={editForm[campo]} style={{ width: 72, height: 52, objectFit: "cover", borderRadius: 6, flexShrink: 0 }} />
+                      ) : (
+                        <div style={{ width: 72, height: 52, background: "rgba(255,255,255,0.04)", border: "0.5px dashed rgba(255,255,255,0.15)", borderRadius: 6, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>Sin foto</span>
+                        </div>
+                      )}
+                      <label style={{ flex: 1, background: "rgba(255,255,255,0.06)", border: "0.5px solid rgba(255,255,255,0.12)", borderRadius: 8, padding: "7px 12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 12 }}>{label}</span>
+                        <span style={{ color: editFotos[campo] ? "#ff6b35" : "rgba(255,255,255,0.3)", fontSize: 12 }}>
+                          {editFotos[campo] ? editFotos[campo].name : "Subir foto"}
+                        </span>
+                        <input type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" style={{ display: "none" }}
+                          onChange={(e) => {
+                            const f = e.target.files[0];
+                            if (f) setEditFotos({ ...editFotos, [campo]: f });
+                          }}
+                        />
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div style={s.modalBtnRow}>
