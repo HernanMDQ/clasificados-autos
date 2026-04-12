@@ -10,15 +10,11 @@ export async function GET(req) {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    const { data, error } = await supabase
-      .from("autos")
-      .select("*")
-      .eq("estado", estado)
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("obtener_autos_por_estado", { p_estado: estado });
 
     if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
-    return Response.json({ ok: true, data, count: data?.length, tieneKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY, estado });
+    return Response.json({ ok: true, data });
   } catch (error) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });
   }
