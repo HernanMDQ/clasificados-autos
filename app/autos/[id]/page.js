@@ -7,7 +7,8 @@ const supabase = createClient(
 );
 
 export async function generateMetadata({ params }) {
-  const id = params.id.split("-").pop();
+  const { id: idParam } = await params;
+  const id = idParam.split("-").pop();
   const { data: auto } = await supabase.from("autos").select("*").eq("id", id).single();
 
   if (!auto) {
