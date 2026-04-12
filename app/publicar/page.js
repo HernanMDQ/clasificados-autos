@@ -80,17 +80,21 @@ export default function Publicar() {
         fotos.map((f) => (f ? subirFoto(f) : Promise.resolve(null)))
       );
 
-      const { error } = await supabase.from("autos").insert([{
-        marca: form.marca, modelo: form.modelo,
-        ano: parseInt(form.anno), kilometros: parseInt(form.km),
-        precio: parseFloat(form.precio),
-        telefono: form.telefono, descripcion: form.descripcion,
-        foto_url: urls[0],
-        foto_url_2: urls[1] || null,
-        foto_url_3: urls[2] || null,
-      }]);
-
-      if (error) throw error;
+      const res = await fetch("/api/publicar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          marca: form.marca, modelo: form.modelo,
+          ano: parseInt(form.anno), kilometros: parseInt(form.km),
+          precio: parseFloat(form.precio),
+          telefono: form.telefono, descripcion: form.descripcion,
+          foto_url: urls[0],
+          foto_url_2: urls[1] || null,
+          foto_url_3: urls[2] || null,
+        }),
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error);
       setExito(true);
     } catch (err) {
       setErrorMsg("Error al publicar: " + err.message);
