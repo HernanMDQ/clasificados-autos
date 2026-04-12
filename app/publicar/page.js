@@ -32,7 +32,16 @@ export default function Publicar() {
       return;
     }
     if (archivo && archivo.size > 1 * 1024 * 1024) {
-      setErrorMsg(`La imagen "${archivo.name}" supera el límite de 1MB.`);
+      setErrorMsg(
+        <span>
+          La imagen <strong>"{archivo.name}"</strong> supera el límite de 1MB.{" "}
+          Podés comprimirla gratis en{" "}
+          <a href="https://tinypng.com" target="_blank" rel="noopener noreferrer" style={{ color: "#ff6b35", textDecoration: "underline" }}>
+            tinypng.com
+          </a>{" "}
+          antes de subirla.
+        </span>
+      );
       return;
     }
     const nuevas = [...fotos];
@@ -52,6 +61,14 @@ export default function Publicar() {
     return data.url;
   };
 
+  const normalizarTelefono = (tel) => {
+    let n = tel.replace(/[\s\-().]/g, "");
+    if (n.startsWith("+54")) n = n.slice(3);
+    else if (n.startsWith("54") && n.length > 10) n = n.slice(2);
+    if (n.startsWith("0")) n = n.slice(1);
+    return n;
+  };
+
   const handleSubmit = async () => {
     if (!aceptaTerminos) {
       setErrorMsg("Debes aceptar las politicas de privacidad para continuar");
@@ -61,6 +78,11 @@ export default function Publicar() {
       setErrorMsg("Por favor completa todos los campos obligatorios");
       return;
     }
+    const telefonoNormalizado = normalizarTelefono(form.telefono);
+    if (!/^\d{10}$/.test(telefonoNormalizado)) {
+      setErrorMsg("El teléfono debe tener 10 dígitos. Ejemplo: 3454123456 (sin 0 ni +54)");
+      return;
+    }
     if (!fotos[0]) {
       setErrorMsg("Por favor agrega al menos la foto de frente del auto");
       return;
@@ -68,7 +90,7 @@ export default function Publicar() {
     const { data: autoExistente } = await supabase
       .from("autos")
       .select("id")
-      .eq("telefono", form.telefono)
+      .eq("telefono", telefonoNormalizado)
       .in("estado", ["aprobado", "pendiente"])
       .maybeSingle();
 
@@ -90,7 +112,7 @@ export default function Publicar() {
           marca: form.marca, modelo: form.modelo,
           ano: parseInt(form.anno), kilometros: parseInt(form.km),
           precio: parseFloat(form.precio),
-          telefono: form.telefono, descripcion: form.descripcion,
+          telefono: telefonoNormalizado, descripcion: form.descripcion,
           foto_url: urls[0],
           foto_url_2: urls[1] || null,
           foto_url_3: urls[2] || null,
@@ -179,7 +201,7 @@ export default function Publicar() {
             </div>
             <div>
               <label style={labelStyle}>Telefono de contacto *</label>
-              <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Ej: 3454123456" style={inputStyle} />
+              <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Ej: 3454123456 (sin 0 ni +54)" style={inputStyle} />
             </div>
             <div>
               <label style={labelStyle}>Descripcion (opcional)</label>
