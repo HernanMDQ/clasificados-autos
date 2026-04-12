@@ -20,6 +20,29 @@ export default function Publicar() {
   const [exito, setExito] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  const [generando, setGenerando] = useState(false);
+
+  const generarDescripcion = async () => {
+    if (!form.marca || !form.modelo || !form.anno || !form.km || !form.precio) {
+      setErrorMsg("Completá marca, modelo, año, kilometros y precio antes de generar la descripción");
+      return;
+    }
+    setGenerando(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/generar-descripcion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ marca: form.marca, modelo: form.modelo, anno: form.anno, km: form.km, precio: form.precio }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      setForm((prev) => ({ ...prev, descripcion: data.descripcion }));
+    } catch (err) {
+      setErrorMsg("No se pudo generar la descripción. Intentá de nuevo.");
+    }
+    setGenerando(false);
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -206,7 +229,25 @@ export default function Publicar() {
             <div>
               <label style={labelStyle}>Descripcion (opcional)</label>
               <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Informacion adicional del auto..." rows={3} maxLength={500} style={{ ...inputStyle, resize: "vertical" }} />
-              <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, marginTop: 4, textAlign: "right" }}>{form.descripcion.length}/500</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
+                <button
+                  type="button"
+                  onClick={generarDescripcion}
+                  disabled={generando}
+                  style={{
+                    background: "rgba(255,69,0,0.1)",
+                    border: "0.5px solid rgba(255,69,0,0.25)",
+                    color: generando ? "rgba(255,107,53,0.5)" : "#ff6b35",
+                    borderRadius: 6,
+                    padding: "5px 12px",
+                    fontSize: 12,
+                    cursor: generando ? "default" : "pointer",
+                  }}
+                >
+                  {generando ? "Generando..." : "✦ Generar descripción con IA"}
+                </button>
+                <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>{form.descripcion.length}/500</span>
+              </div>
             </div>
 
             <div>
