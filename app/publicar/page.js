@@ -42,11 +42,14 @@ export default function Publicar() {
   };
 
   const subirFoto = async (foto) => {
-    const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + foto.name;
-    const { error } = await supabase.storage.from("fotos-autos").upload(fileName, foto);
-    if (error) throw error;
-    const { data } = supabase.storage.from("fotos-autos").getPublicUrl(fileName);
-    return data.publicUrl;
+    const nombre = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + foto.name;
+    const fd = new FormData();
+    fd.append("archivo", foto);
+    fd.append("nombre", nombre);
+    const res = await fetch("/api/subir-foto", { method: "POST", body: fd });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    return data.url;
   };
 
   const handleSubmit = async () => {
@@ -91,6 +94,7 @@ export default function Publicar() {
           foto_url: urls[0],
           foto_url_2: urls[1] || null,
           foto_url_3: urls[2] || null,
+          estado: "pendiente",
         }),
       });
       const data = await res.json();

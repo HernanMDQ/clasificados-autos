@@ -359,11 +359,14 @@ export default function Admin() {
   };
 
   const subirFotoAdmin = async (archivo) => {
-    const fileName = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + archivo.name;
-    const { error } = await supabase.storage.from("fotos-autos").upload(fileName, archivo);
-    if (error) throw error;
-    const { data } = supabase.storage.from("fotos-autos").getPublicUrl(fileName);
-    return data.publicUrl;
+    const nombre = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" + archivo.name;
+    const fd = new FormData();
+    fd.append("archivo", archivo);
+    fd.append("nombre", nombre);
+    const res = await fetch("/api/subir-foto", { method: "POST", body: fd });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    return data.url;
   };
 
   const guardarEdicion = async () => {
