@@ -27,6 +27,18 @@ export default function NavBar() {
         <div className="nav-desktop" style={{ gap: 24, alignItems: "center" }}>
           <a href="/" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>Buscar</a>
           <a href="/autos" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>Listado</a>
+          <a href="https://www.instagram.com/autosconcordiacomar/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/AutosConcordia" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.4)", display: "flex", alignItems: "center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
           <a href="/publicar" style={{ background: "#ff4500", color: "#fff", padding: "7px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
             Publicar
           </a>
@@ -60,12 +72,16 @@ export default function NavBar() {
             {[
               { href: "/", label: "Buscar" },
               { href: "/autos", label: "Listado" },
-            ].map(({ href, label }) => (
+              { href: "https://www.instagram.com/autosconcordiacomar/", label: "@instagram", externo: true },
+              { href: "https://www.facebook.com/AutosConcordia", label: "@facebook", externo: true },
+            ].map(({ href, label, externo }) => (
               <a
                 key={href}
                 href={href}
                 onClick={() => setAbierto(false)}
-                style={{ display: "block", padding: "14px 24px", color: "rgba(255,255,255,0.7)", fontSize: 15, textDecoration: "none", borderBottom: "0.5px solid rgba(255,255,255,0.05)" }}
+                target={externo ? "_blank" : undefined}
+                rel={externo ? "noopener noreferrer" : undefined}
+                style={{ display: "block", padding: "14px 24px", color: externo ? "rgba(255,107,53,0.8)" : "rgba(255,255,255,0.7)", fontSize: 15, textDecoration: "none", borderBottom: "0.5px solid rgba(255,255,255,0.05)" }}
               >
                 {label}
               </a>
