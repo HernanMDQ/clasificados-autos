@@ -32,7 +32,7 @@ export async function POST(req) {
           <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;" />
           <p style="color: #333; line-height: 1.6; white-space: pre-wrap;">${mensaje}</p>
           <hr style="margin: 16px 0; border: none; border-top: 1px solid #eee;" />
-          <p style="color: #999; font-size: 12px;">Mensaje enviado desde el formulario de contacto de autosConcordia.com.ar</p>
+          <p style="color: #999; font-size: 12px;">Mensaje enviado desde el formulario de contacto de autoconcordia.com.ar</p>
         </div>
       `,
     });
