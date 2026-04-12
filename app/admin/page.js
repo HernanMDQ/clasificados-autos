@@ -282,13 +282,10 @@ export default function Admin() {
 
   const cargarAutos = async (estado) => {
     setLoading(true);
-    const { data } = await supabase
-      .from("autos")
-      .select("*")
-      .eq("estado", estado)
-      .order("created_at", { ascending: false });
-    setAutos(data || []);
-    setFiltrados(data || []);
+    const res = await fetch(`/api/admin-autos?estado=${estado}`);
+    const json = await res.json();
+    setAutos(json.data || []);
+    setFiltrados(json.data || []);
     setLoading(false);
   };
 
