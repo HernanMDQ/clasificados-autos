@@ -9,6 +9,8 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+const POR_PAGINA = 3;
+
 function AutosContent() {
   const searchParams = useSearchParams();
   const [autos, setAutos] = useState([]);
@@ -17,6 +19,7 @@ function AutosContent() {
   const [modelo, setModelo] = useState(searchParams.get("modelo") || "");
   const [precioMax, setPrecioMax] = useState(searchParams.get("precioMax") || "");
   const [annoMin, setAnnoMin] = useState(searchParams.get("annoMin") || "");
+  const [pagina, setPagina] = useState(1);
 
   useEffect(() => {
     const cargar = async () => {
@@ -38,9 +41,13 @@ function AutosContent() {
     if (precioMax) resultado = resultado.filter((a) => a.precio <= parseFloat(precioMax));
     if (annoMin) resultado = resultado.filter((a) => a.ano >= parseInt(annoMin));
     setFiltrados(resultado);
+    setPagina(1);
   }, [marca, modelo, precioMax, annoMin, autos]);
 
   const limpiarFiltros = () => { setMarca(""); setModelo(""); setPrecioMax(""); setAnnoMin(""); };
+
+  const totalPaginas = Math.ceil(filtrados.length / POR_PAGINA);
+  const paginados = filtrados.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA);
 
   const inputStyle = {
     background: "rgba(255,255,255,0.06)",
@@ -52,6 +59,27 @@ function AutosContent() {
     outline: "none",
     width: "100%"
   };
+
+  const btnPaginaStyle = (activo) => ({
+    background: activo ? "#ff4500" : "rgba(255,255,255,0.06)",
+    color: activo ? "#fff" : "rgba(255,255,255,0.5)",
+    border: activo ? "none" : "0.5px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "7px 13px",
+    fontSize: 13,
+    cursor: activo ? "default" : "pointer",
+    fontWeight: activo ? 500 : 400,
+  });
+
+  const btnNavStyle = (disabled) => ({
+    background: "rgba(255,255,255,0.06)",
+    color: disabled ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
+    border: "0.5px solid rgba(255,255,255,0.12)",
+    borderRadius: 8,
+    padding: "7px 14px",
+    fontSize: 13,
+    cursor: disabled ? "default" : "pointer",
+  });
 
   return (
     <main style={{ background: "#0d1520", minHeight: "100vh", padding: "32px 24px" }}>
@@ -110,7 +138,7 @@ function AutosContent() {
         )}
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
-          {filtrados.map((auto) => (
+          {paginados.map((auto) => (
             <div key={auto.id} style={{
               background: "#131e2e",
               border: "0.5px solid rgba(255,255,255,0.07)",
@@ -138,8 +166,7 @@ function AutosContent() {
                   {auto.descripcion ? (auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion) : ""}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  
-                    <a href={`/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-")}
+                  <a href={`/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-")}
                     style={{
                       display: "block", textAlign: "center",
                       background: "rgba(255,69,0,0.1)",
@@ -150,8 +177,7 @@ function AutosContent() {
                   >
                     Ver detalle
                   </a>
-                  
-                    <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en AutosConcordia.com.ar`)}`}
+                  <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en AutosConcordia.com.ar`)}`}
                     target="_blank"
                     style={{
                       display: "block", textAlign: "center",
@@ -168,6 +194,38 @@ function AutosContent() {
             </div>
           ))}
         </div>
+
+        {/* PAGINACION */}
+        {totalPaginas > 1 && (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 32 }}>
+            <button
+              onClick={() => setPagina(p => p - 1)}
+              disabled={pagina === 1}
+              style={btnNavStyle(pagina === 1)}
+            >
+              ← Anterior
+            </button>
+
+            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                onClick={() => setPagina(n)}
+                style={btnPaginaStyle(n === pagina)}
+              >
+                {n}
+              </button>
+            ))}
+
+            <button
+              onClick={() => setPagina(p => p + 1)}
+              disabled={pagina === totalPaginas}
+              style={btnNavStyle(pagina === totalPaginas)}
+            >
+              Siguiente →
+            </button>
+          </div>
+        )}
+
       </div>
     </main>
   );
