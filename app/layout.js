@@ -7,15 +7,15 @@ const LOGO_ICONO = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/p
 export const metadata = {
   title: "Autos Concordia",
   description: "Encontra tu proximo auto en Concordia con inteligencia artificial",
-  icons: {
-    icon: LOGO_ICONO,
-    apple: LOGO_ICONO,
-  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
+      <head>
+        <link rel="icon" href={LOGO_ICONO} />
+        <link rel="apple-touch-icon" href={LOGO_ICONO} />
+      </head>
       <body className="overflow-x-hidden">
         <NavBar />
                 {children}
