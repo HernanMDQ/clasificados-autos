@@ -15,17 +15,10 @@ export default function NavBar() {
         alignItems: "center",
         position: "relative",
       }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", minWidth: 0, overflow: "hidden" }}>
+        <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
           <img
             src="https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png"
             alt="Autos Concordia"
-            className="logo-desktop"
-            style={{ height: 36, width: "auto", objectFit: "contain" }}
-          />
-          <img
-            src="https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/LOGO%20AUTO%20OSCURO.png"
-            alt="Autos Concordia"
-            className="logo-mobile"
             style={{ height: 36, width: "auto", objectFit: "contain" }}
           />
         </a>
@@ -57,9 +50,12 @@ export default function NavBar() {
         {/* Dropdown mobile */}
         {abierto && (
           <div style={{
-            position: "absolute", top: "100%", left: 0, right: 0,
+            position: "absolute", top: "100%", right: 0,
+            width: 180,
             background: "#0d1520",
-            borderBottom: "0.5px solid rgba(255,255,255,0.08)",
+            border: "0.5px solid rgba(255,255,255,0.08)",
+            borderTop: "none",
+            borderRadius: "0 0 12px 12px",
           }}>
             {[
               { href: "/", label: "Buscar" },
