@@ -14,6 +14,7 @@ export default function FichaAuto() {
   const [cargado, setCargado] = useState(false);
   const [fotoActiva, setFotoActiva] = useState(0);
   const [popup, setPopup] = useState(false);
+  const [copiado, setCopiado] = useState(false);
 
   useEffect(() => {
     const id = params.id.split("-").pop();
@@ -40,7 +41,21 @@ export default function FichaAuto() {
 
   const fotos = [auto.foto_url, auto.foto_url_2, auto.foto_url_3].filter(Boolean);
   const slug = `${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-");
-  const urlCompartir = `https://wa.me/?text=Mira este auto: ${auto.marca} ${auto.modelo} ${auto.ano} - USD ${auto.precio?.toLocaleString()} - ${process.env.NEXT_PUBLIC_SITE_URL}/autos/${slug}`;
+  const urlFicha = `${process.env.NEXT_PUBLIC_SITE_URL}/autos/${slug}`;
+
+  const compartir = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: `${auto.marca} ${auto.modelo} ${auto.ano}`,
+        text: `${auto.marca} ${auto.modelo} ${auto.ano} - USD ${auto.precio?.toLocaleString()}`,
+        url: urlFicha,
+      });
+    } else {
+      await navigator.clipboard.writeText(urlFicha);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2500);
+    }
+  };
 
   return (
     <main style={{ background: "#0d1520", minHeight: "100vh", padding: "32px 24px" }}>
@@ -118,12 +133,12 @@ export default function FichaAuto() {
                 Contactar por WhatsApp
               </a>
               
-                <a href={urlCompartir}
-                target="_blank"
-                style={{ display: "block", textAlign: "center", background: "rgba(255,69,0,0.08)", color: "#ff6b35", border: "0.5px solid rgba(255,69,0,0.2)", padding: "12px", borderRadius: 10, fontSize: 14, textDecoration: "none" }}
+              <button
+                onClick={compartir}
+                style={{ display: "block", width: "100%", textAlign: "center", background: "rgba(255,69,0,0.08)", color: copiado ? "#4ade80" : "#ff6b35", border: `0.5px solid ${copiado ? "rgba(74,222,128,0.3)" : "rgba(255,69,0,0.2)"}`, padding: "12px", borderRadius: 10, fontSize: 14, cursor: "pointer" }}
               >
-                Compartir este auto
-              </a>
+                {copiado ? "¡Link copiado!" : "Compartir este vehículo"}
+              </button>
             </div>
             <p style={{ color: "rgba(255,255,255,0.18)", fontSize: 11, marginTop: 20, textAlign: "right" }}>
               Publicado el {new Date(auto.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" })}
