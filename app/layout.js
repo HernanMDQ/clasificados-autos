@@ -2,7 +2,6 @@ import "./globals.css";
 import BotonWA from "./components/BotonWA";
 import NavBar from "./components/NavBar";
 
-const LOGO_ICONO = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/LOGO%20AUTO%20OSCURO.png";
 
 export const metadata = {
   title: "Autos Concordia",
@@ -12,11 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <head>
-        <link rel="icon" href={LOGO_ICONO} />
-        <link rel="apple-touch-icon" href={LOGO_ICONO} />
-      </head>
-      <body className="overflow-x-hidden">
+<body className="overflow-x-hidden">
         <NavBar />
                 {children}
         <BotonWA />
