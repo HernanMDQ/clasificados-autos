@@ -177,7 +177,7 @@ function AutosContent() {
                   >
                     Ver detalle
                   </a>
-                  <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en autoconcordia.com.ar`)}`}
+                  <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en autosconcordia.com.ar`)}`}
                     target="_blank"
                     style={{
                       display: "block", textAlign: "center",

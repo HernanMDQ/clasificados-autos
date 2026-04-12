@@ -3,7 +3,7 @@ import BotonWA from "./components/BotonWA";
 import NavBar from "./components/NavBar";
 
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autoconcordia.com.ar";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autosconcordia.com.ar";
 const OG_IMAGE = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png";
 
 export const metadata = {

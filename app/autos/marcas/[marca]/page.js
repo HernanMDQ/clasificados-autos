@@ -8,7 +8,7 @@ const supabase = createClient(
 
 export const revalidate = 3600;
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autoconcordia.com.ar";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autosconcordia.com.ar";
 
 function capitalizar(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -138,7 +138,7 @@ export default async function MarcaPage({ params }) {
                       }}>
                         Ver detalle
                       </Link>
-                      <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en autoconcordia.com.ar`)}`}
+                      <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en autosconcordia.com.ar`)}`}
                         target="_blank"
                         style={{
                           display: "block", textAlign: "center",
