@@ -17,7 +17,7 @@ export default function NavBar() {
         top: 0,
         zIndex: 50,
       }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+        <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", minWidth: 0, overflow: "hidden" }}>
           <img
             src="https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png"
             alt="Autos Concordia"

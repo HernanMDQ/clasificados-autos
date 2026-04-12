@@ -20,7 +20,7 @@ body {
 .nav-desktop { display: flex; }
 .nav-mobile { display: none; }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .logo-mobile { display: block; }
   .logo-desktop { display: none; }
   .nav-desktop { display: none !important; }
