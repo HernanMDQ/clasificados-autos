@@ -126,7 +126,7 @@ export default function FichaAuto() {
             )}
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               
-                <a href={"https://wa.me/+54" + auto.telefono}
+                <a href={`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(`Hola, te contacto por la publicación de ${auto.marca} ${auto.modelo} (${auto.ano}) visto en AutosConcordia.com.ar`)}`}
                 target="_blank"
                 style={{ display: "block", textAlign: "center", background: "rgba(37,211,102,0.12)", color: "#25d366", border: "0.5px solid rgba(37,211,102,0.25)", padding: "12px", borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: "none" }}
               >
