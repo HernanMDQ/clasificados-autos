@@ -1,9 +1,16 @@
 import "./globals.css";
 import BotonWA from "./components/BotonWA";
 
+const LOGO_ICONO = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/LOGO%20AUTO%20OSCURO.png";
+const LOGO_COMPLETO = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png";
+
 export const metadata = {
   title: "Autos Concordia",
   description: "Encontra tu proximo auto en Concordia con inteligencia artificial",
+  icons: {
+    icon: LOGO_ICONO,
+    apple: LOGO_ICONO,
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -21,17 +28,19 @@ export default function RootLayout({ children }) {
           top: 0,
           zIndex: 50,
         }}>
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-            <div style={{
-              width: 36, height: 36,
-              background: "#ff4500",
-              borderRadius: 8,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 18
-            }}>🚗</div>
-            <span style={{ color: "#fff", fontSize: 17, fontWeight: 500 }}>
-              Autos <span style={{ color: "#ff6b35" }}>Concordia</span>
-            </span>
+          <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <img
+              src={LOGO_COMPLETO}
+              alt="Autos Concordia"
+              className="logo-desktop"
+              style={{ height: 36, width: "auto", objectFit: "contain" }}
+            />
+            <img
+              src={LOGO_ICONO}
+              alt="Autos Concordia"
+              className="logo-mobile"
+              style={{ height: 36, width: "auto", objectFit: "contain" }}
+            />
           </a>
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             <a href="/" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>
