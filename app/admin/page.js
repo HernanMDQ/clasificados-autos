@@ -273,11 +273,11 @@ export default function Admin() {
   const limpiarRechazados = async () => {
     const hace30dias = new Date();
     hace30dias.setDate(hace30dias.getDate() - 30);
-    await supabase
-      .from("autos")
-      .delete()
-      .eq("estado", "rechazado")
-      .lt("created_at", hace30dias.toISOString());
+    await fetch("/api/eliminar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ limpiar_rechazados: true, fecha: hace30dias.toISOString() }),
+    });
   };
 
   const cargarAutos = async (estado) => {
@@ -304,7 +304,11 @@ export default function Admin() {
   }, [marca, modelo, anno, autos]);
 
   const cambiarEstado = async (id, estado) => {
-    await supabase.from("autos").update({ estado }).eq("id", id);
+    await fetch("/api/editar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, datos: { estado } }),
+    });
 
     if (estado === "aprobado") {
       const auto = autos.find((a) => a.id === id);

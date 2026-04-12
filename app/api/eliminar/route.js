@@ -2,14 +2,19 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req) {
   try {
-    const { id } = await req.json();
+    const body = await req.json();
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-    await supabase.from("autos").delete().eq("id", id);
+    if (body.limpiar_rechazados) {
+      await supabase.from("autos").delete().eq("estado", "rechazado").lt("created_at", body.fecha);
+      return Response.json({ ok: true });
+    }
+
+    await supabase.from("autos").delete().eq("id", body.id);
 
     return Response.json({ ok: true });
   } catch (error) {
