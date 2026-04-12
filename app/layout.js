@@ -3,9 +3,27 @@ import BotonWA from "./components/BotonWA";
 import NavBar from "./components/NavBar";
 
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autoconcordia.com.ar";
+const OG_IMAGE = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png";
+
 export const metadata = {
   title: "Autos Concordia | Venta de usados y compras con IA",
   description: "Encontra tu proximo auto o publicalo gratis para Concordia y la región",
+  openGraph: {
+    title: "Autos Concordia | Venta de usados y compras con IA",
+    description: "Encontra tu proximo auto o publicalo gratis para Concordia y la región",
+    url: SITE_URL,
+    siteName: "Autos Concordia",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "Autos Concordia" }],
+    locale: "es_AR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Autos Concordia | Venta de usados y compras con IA",
+    description: "Encontra tu proximo auto o publicalo gratis para Concordia y la región",
+    images: [OG_IMAGE],
+  },
 };
 
 export default function RootLayout({ children }) {
