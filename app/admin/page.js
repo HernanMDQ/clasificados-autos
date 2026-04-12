@@ -334,6 +334,12 @@ export default function Admin() {
     cargarAutos(pestana);
   };
 
+  const eliminarFoto = async (id, campo) => {
+    if (!confirm("¿Eliminar esta foto?")) return;
+    await supabase.rpc("eliminar_foto_auto", { auto_id: id, campo });
+    cargarAutos(pestana);
+  };
+
   const abrirEditor = (auto) => {
     setEditando(auto.id);
     setEditForm({
@@ -477,9 +483,29 @@ export default function Admin() {
         <div>
           {filtrados.map((auto) => (
             <div key={auto.id} style={s.card}>
-              {auto.foto_url && (
-                <img src={auto.foto_url} alt={`${auto.marca} ${auto.modelo}`} style={s.img} />
-              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 4, flexShrink: 0 }}>
+                {[
+                  { url: auto.foto_url, campo: "foto_url" },
+                  { url: auto.foto_url_2, campo: "foto_url_2" },
+                  { url: auto.foto_url_3, campo: "foto_url_3" },
+                ].map(({ url, campo }) => url ? (
+                  <div key={campo} style={{ position: "relative" }}>
+                    <img src={url} alt={campo} style={s.img} />
+                    <button
+                      onClick={() => eliminarFoto(auto.id, campo)}
+                      style={{
+                        position: "absolute", top: 4, right: 4,
+                        background: "rgba(0,0,0,0.7)", border: "none",
+                        color: "#fff", borderRadius: "50%",
+                        width: 20, height: 20, fontSize: 11,
+                        cursor: "pointer", display: "flex",
+                        alignItems: "center", justifyContent: "center",
+                        lineHeight: 1,
+                      }}
+                    >✕</button>
+                  </div>
+                ) : null)}
+              </div>
               <div style={{ flex: 1 }}>
                 <h2 style={s.cardTitle}>{auto.marca} {auto.modelo}</h2>
                 <p style={s.cardSub}>
