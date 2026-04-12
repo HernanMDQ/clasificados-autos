@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 
 export const metadata = {
   title: "Autos Concordia | Venta de usados y compras con IA",
-  description: "Encontra tu proximo auto en Concordia con inteligencia artificial",
+  description: "Encontra tu proximo auto o publicalo gratis para Concordia y la región",
 };
 
 export default function RootLayout({ children }) {
