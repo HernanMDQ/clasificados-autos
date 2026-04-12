@@ -136,7 +136,7 @@ function AutosContent() {
                 </p>
                 {auto.descripcion && (
                   <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5 }}>
-                    {auto.descripcion.length > 120 ? auto.descripcion.slice(0, 120) + "..." : auto.descripcion}
+                    {auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion}
                   </p>
                 )}
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
