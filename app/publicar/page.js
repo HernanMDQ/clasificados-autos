@@ -183,7 +183,8 @@ export default function Publicar() {
             </div>
             <div>
               <label style={labelStyle}>Descripcion (opcional)</label>
-              <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Informacion adicional del auto..." rows={3} style={{ ...inputStyle, resize: "vertical" }} />
+              <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Informacion adicional del auto..." rows={3} maxLength={500} style={{ ...inputStyle, resize: "vertical" }} />
+              <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, marginTop: 4, textAlign: "right" }}>{form.descripcion.length}/500</p>
             </div>
 
             <div>
