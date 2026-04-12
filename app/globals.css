@@ -17,9 +17,14 @@ body {
 .logo-mobile { display: none; }
 .logo-desktop { display: block; }
 
+.nav-desktop { display: flex; }
+.nav-mobile { display: none; }
+
 @media (max-width: 480px) {
   .logo-mobile { display: block; }
   .logo-desktop { display: none; }
+  .nav-desktop { display: none !important; }
+  .nav-mobile { display: flex; }
 }
 
 ::selection {
