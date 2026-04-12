@@ -93,16 +93,8 @@ export default function Home() {
           Encontra tu proximo auto<br />en <span style={{ color: "#ff4500" }}>Concordia</span>
         </h1>
         <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.65 }}>
-          Contanos que estas buscando y nuestra IA te ayuda a encontrar el auto ideal entre todos los anuncios disponibles.
+          Encontra tu proximo auto o publicalo gratis para Concordia y la región
         </p>
-        <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 28 }}>
-          <a href="/autos" style={{ background: "#ff4500", color: "#fff", padding: "10px 22px", borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
-            Ver todos los autos
-          </a>
-          <a href="/publicar" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.8)", padding: "10px 22px", borderRadius: 10, fontSize: 14, border: "0.5px solid rgba(255,255,255,0.12)", textDecoration: "none" }}>
-            Publicar mi auto
-          </a>
-        </div>
 
         {/* CHAT */}
         <div style={{
@@ -203,6 +195,15 @@ export default function Home() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginTop: 24 }}>
+          <a href="/autos" style={{ background: "#ff4500", color: "#fff", padding: "10px 22px", borderRadius: 10, fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
+            Ver todos los autos
+          </a>
+          <a href="/publicar" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.8)", padding: "10px 22px", borderRadius: 10, fontSize: 14, border: "0.5px solid rgba(255,255,255,0.12)", textDecoration: "none" }}>
+            Publicar mi auto
+          </a>
         </div>
       </section>
       {/* ULTIMOS AUTOS *
