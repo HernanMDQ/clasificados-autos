@@ -97,7 +97,6 @@ export default function FichaAuto() {
               {[
                 { label: "Año", value: auto.ano },
                 { label: "Kilometros", value: auto.kilometros?.toLocaleString() + " km" },
-                { label: "Publicado", value: new Date(auto.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" }) },
               ].map((item, i) => (
                 <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 10, padding: "12px 16px" }}>
                   <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginBottom: 4 }}>{item.label}</p>
@@ -126,6 +125,9 @@ export default function FichaAuto() {
                 Compartir este auto
               </a>
             </div>
+            <p style={{ color: "rgba(255,255,255,0.18)", fontSize: 11, marginTop: 20, textAlign: "right" }}>
+              Publicado el {new Date(auto.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" })}
+            </p>
           </div>
         </div>
       </div>
