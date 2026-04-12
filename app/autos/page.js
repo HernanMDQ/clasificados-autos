@@ -9,7 +9,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
-const POR_PAGINA = 3;
+const POR_PAGINA = 12;
 
 function AutosContent() {
   const searchParams = useSearchParams();
