@@ -9,30 +9,12 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef(null);
-  const [ultimosAutos, setUltimosAutos] = useState([]);
 
   useEffect(() => {
     if (messages.length > 1) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, loading]);
-  useEffect(() => {
-    const cargarAutos = async () => {
-      const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      );
-      const { data } = await supabase
-        .from("autos")
-        .select("*")
-        .eq("estado", "aprobado")
-        .order("created_at", { ascending: false })
-        .limit(3);
-      setUltimosAutos(data || []);
-    };
-    cargarAutos();
-  }, []);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
