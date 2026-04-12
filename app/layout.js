@@ -80,6 +80,9 @@ export default function RootLayout({ children }) {
             <a href="/descargo" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
               Descargo de responsabilidad
             </a>
+            <a href="/faqs" style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, textDecoration: "none" }}>
+              Preguntas frecuentes
+            </a>
           </div>
           <p style={{ color: "rgba(255,255,255,0.18)", fontSize: 12 }}>
             © {new Date().getFullYear()} Autos Concordia. Todos los derechos reservados.
