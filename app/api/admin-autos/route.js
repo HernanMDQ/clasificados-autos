@@ -18,7 +18,7 @@ export async function GET(req) {
 
     if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
-    return Response.json({ ok: true, data });
+    return Response.json({ ok: true, data, count: data?.length, tieneKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY, estado });
   } catch (error) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });
   }
