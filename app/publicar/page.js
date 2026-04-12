@@ -94,6 +94,9 @@ export default function Publicar() {
     return data.url;
   };
 
+  const capitalizarPalabras = (str) =>
+    str.trim().toLowerCase().replace(/(^|\s|-)(\w)/g, (_, sep, c) => sep + c.toUpperCase());
+
   const normalizarPrecio = (valor) => {
     const s = valor.toString();
     // Elimina la parte decimal (coma o punto seguido de 1-2 dígitos al final)
@@ -154,7 +157,7 @@ export default function Publicar() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          marca: form.marca, modelo: form.modelo,
+          marca: capitalizarPalabras(form.marca), modelo: capitalizarPalabras(form.modelo),
           ano: parseInt(form.anno), kilometros: normalizarKm(form.km),
           precio: normalizarPrecio(form.precio),
           telefono: telefonoNormalizado, descripcion: form.descripcion,
