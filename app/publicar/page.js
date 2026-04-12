@@ -22,6 +22,13 @@ export default function Publicar() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [generando, setGenerando] = useState(false);
 
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
   const generarDescripcion = async () => {
     if (!form.marca || !form.modelo || !form.anno || !form.km || !form.precio) {
       setErrorMsg("Completá marca, modelo, año, kilometros y precio antes de generar la descripción");
@@ -30,10 +37,13 @@ export default function Publicar() {
     setGenerando(true);
     setErrorMsg("");
     try {
+      let fotoBase64 = null;
+      if (fotos[0]) fotoBase64 = await toBase64(fotos[0]);
+
       const res = await fetch("/api/generar-descripcion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ marca: form.marca, modelo: form.modelo, anno: form.anno, km: form.km, precio: form.precio }),
+        body: JSON.stringify({ marca: form.marca, modelo: form.modelo, anno: form.anno, km: form.km, precio: form.precio, fotoBase64 }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
