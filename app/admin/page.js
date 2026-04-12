@@ -526,7 +526,33 @@ export default function Admin() {
                       }}
                     >✕</button>
                   </div>
-                ) : null)}
+                ) : (
+                  <label key={campo} style={{
+                    width: 112, height: 80, background: "rgba(255,255,255,0.03)",
+                    border: "0.5px dashed rgba(255,255,255,0.15)", borderRadius: 10,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    cursor: "pointer", flexShrink: 0,
+                  }}>
+                    <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 22 }}>+</span>
+                    <input type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" style={{ display: "none" }}
+                      onChange={async (e) => {
+                        const archivo = e.target.files[0];
+                        if (!archivo) return;
+                        try {
+                          const url = await subirFotoAdmin(archivo);
+                          await fetch("/api/editar", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id: auto.id, datos: { [campo]: url } }),
+                          });
+                          cargarAutos(pestana);
+                        } catch (err) {
+                          alert("Error al subir foto: " + err.message);
+                        }
+                      }}
+                    />
+                  </label>
+                ))}
               </div>
               <div style={{ flex: 1 }}>
                 <h2 style={s.cardTitle}>{auto.marca} {auto.modelo}</h2>
