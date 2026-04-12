@@ -94,6 +94,18 @@ export default function Publicar() {
     return data.url;
   };
 
+  const normalizarPrecio = (valor) => {
+    const s = valor.toString();
+    // Elimina la parte decimal (coma o punto seguido de 1-2 dígitos al final)
+    const sinDecimal = s.replace(/[,.](\d{1,2})$/, "");
+    // Elimina todo lo que no sea dígito
+    return parseInt(sinDecimal.replace(/\D/g, "")) || 0;
+  };
+
+  const normalizarKm = (valor) => {
+    return parseInt(valor.toString().replace(/\D/g, "")) || 0;
+  };
+
   const normalizarTelefono = (tel) => {
     let n = tel.replace(/[\s\-().]/g, "");
     if (n.startsWith("+54")) n = n.slice(3);
@@ -143,8 +155,8 @@ export default function Publicar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           marca: form.marca, modelo: form.modelo,
-          ano: parseInt(form.anno), kilometros: parseInt(form.km),
-          precio: parseFloat(form.precio),
+          ano: parseInt(form.anno), kilometros: normalizarKm(form.km),
+          precio: normalizarPrecio(form.precio),
           telefono: telefonoNormalizado, descripcion: form.descripcion,
           foto_url: urls[0],
           foto_url_2: urls[1] || null,
