@@ -134,11 +134,9 @@ function AutosContent() {
                 <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: 12 }}>
                   USD {auto.precio?.toLocaleString()}
                 </p>
-                {auto.descripcion && (
-                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5 }}>
-                    {auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion}
-                  </p>
-                )}
+                <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5, minHeight: 36 }}>
+                  {auto.descripcion ? (auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion) : ""}
+                </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   
                     <a href={`/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-")}
