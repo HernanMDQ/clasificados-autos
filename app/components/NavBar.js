@@ -5,7 +5,7 @@ export default function NavBar() {
   const [abierto, setAbierto] = useState(false);
 
   return (
-    <>
+    <div style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <nav style={{
         background: "#0d1520",
         borderBottom: "0.5px solid rgba(255,255,255,0.08)",
@@ -13,9 +13,7 @@ export default function NavBar() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
+        position: "relative",
       }}>
         <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none", minWidth: 0, overflow: "hidden" }}>
           <img
@@ -33,7 +31,7 @@ export default function NavBar() {
         </a>
 
         {/* Desktop */}
-        <div className="nav-desktop" style={{ display: "flex", gap: 24, alignItems: "center" }}>
+        <div className="nav-desktop" style={{ gap: 24, alignItems: "center" }}>
           <a href="/" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>Buscar</a>
           <a href="/autos" style={{ color: "rgba(255,255,255,0.55)", fontSize: 14, textDecoration: "none" }}>Listado</a>
           <a href="/publicar" style={{ background: "#ff4500", color: "#fff", padding: "7px 16px", borderRadius: 8, fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
@@ -42,7 +40,7 @@ export default function NavBar() {
         </div>
 
         {/* Mobile */}
-        <div className="nav-mobile" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div className="nav-mobile" style={{ alignItems: "center", gap: 12 }}>
           <a href="/publicar" style={{ background: "#ff4500", color: "#fff", padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
             Publicar
           </a>
@@ -50,36 +48,35 @@ export default function NavBar() {
             onClick={() => setAbierto(!abierto)}
             style={{ background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", gap: 5, padding: 4 }}
           >
-            <span style={{ display: "block", width: 22, height: 2, background: abierto ? "rgba(255,255,255,0.3)" : "#fff", borderRadius: 2, transition: "0.2s", transform: abierto ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+            <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "0.2s", transform: abierto ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
             <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "0.2s", opacity: abierto ? 0 : 1 }} />
-            <span style={{ display: "block", width: 22, height: 2, background: abierto ? "rgba(255,255,255,0.3)" : "#fff", borderRadius: 2, transition: "0.2s", transform: abierto ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+            <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "0.2s", transform: abierto ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
           </button>
         </div>
-      </nav>
 
-      {/* Dropdown mobile */}
-      {abierto && (
-        <div className="nav-mobile" style={{
-          position: "fixed", top: 65, left: 0, right: 0, zIndex: 49,
-          background: "#0d1520",
-          borderBottom: "0.5px solid rgba(255,255,255,0.08)",
-          padding: "8px 0",
-        }}>
-          {[
-            { href: "/", label: "Buscar" },
-            { href: "/autos", label: "Listado" },
-          ].map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              onClick={() => setAbierto(false)}
-              style={{ display: "block", padding: "14px 24px", color: "rgba(255,255,255,0.7)", fontSize: 15, textDecoration: "none", borderBottom: "0.5px solid rgba(255,255,255,0.05)" }}
-            >
-              {label}
-            </a>
-          ))}
-        </div>
-      )}
-    </>
+        {/* Dropdown mobile */}
+        {abierto && (
+          <div style={{
+            position: "absolute", top: "100%", left: 0, right: 0,
+            background: "#0d1520",
+            borderBottom: "0.5px solid rgba(255,255,255,0.08)",
+          }}>
+            {[
+              { href: "/", label: "Buscar" },
+              { href: "/autos", label: "Listado" },
+            ].map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setAbierto(false)}
+                style={{ display: "block", padding: "14px 24px", color: "rgba(255,255,255,0.7)", fontSize: 15, textDecoration: "none", borderBottom: "0.5px solid rgba(255,255,255,0.05)" }}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        )}
+      </nav>
+    </div>
   );
 }
