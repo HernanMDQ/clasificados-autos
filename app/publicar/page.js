@@ -240,14 +240,57 @@ export default function Publicar() {
                 <input name="km" value={form.km} onChange={handleChange} placeholder="Ej: 50000" style={inputStyle} />
               </div>
             </div>
-            <div>
-              <label style={labelStyle}>Precio en USD *</label>
-              <input name="precio" value={form.precio} onChange={handleChange} placeholder="Ej: 18000" style={inputStyle} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={labelStyle}>Precio en USD *</label>
+                <input name="precio" value={form.precio} onChange={handleChange} placeholder="Ej: 18000" style={inputStyle} />
+              </div>
+              <div>
+                <label style={labelStyle}>Telefono de contacto *</label>
+                <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Ej: 3454123456 (sin 0 ni +54)" style={inputStyle} />
+              </div>
             </div>
+
             <div>
-              <label style={labelStyle}>Telefono de contacto *</label>
-              <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Ej: 3454123456 (sin 0 ni +54)" style={inputStyle} />
+              <label style={labelStyle}>Fotos del auto (hasta 3)</label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                {fotos.map((foto, i) => (
+                  <div key={i}>
+                    <label style={{
+                      display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+                      background: "rgba(255,255,255,0.06)",
+                      border: foto ? "0.5px solid rgba(255,69,0,0.4)" : "0.5px solid rgba(255,255,255,0.12)",
+                      borderRadius: 8, padding: "12px 8px", cursor: "pointer",
+                      textAlign: "center", position: "relative", minHeight: 80
+                    }}>
+                      <span style={{
+                        background: foto ? "#ff4500" : "rgba(255,255,255,0.1)",
+                        color: "#fff",
+                        padding: "4px 10px", borderRadius: 6,
+                        fontSize: 11, fontWeight: 500, whiteSpace: "nowrap"
+                      }}>
+                        {LABELS[i]}
+                      </span>
+                      <span style={{ color: foto ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", width: "100%" }}>
+                        {foto ? foto.name : "Sin archivo"}
+                      </span>
+                      {foto && (
+                        <button
+                          type="button"
+                          onClick={(e) => { e.preventDefault(); handleFoto(i, null); }}
+                          style={{ position: "absolute", top: 6, right: 6, background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 14, lineHeight: 1 }}
+                        >
+                          ✕
+                        </button>
+                      )}
+                      <input type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" onChange={(e) => handleFoto(i, e.target.files[0] || null)} style={{ display: "none" }} />
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* Cada imagen no puede superar 1MB. Formatos permitidos: JPG, PNG, WEBP, HEIC</p>
             </div>
+
             <div>
               <label style={labelStyle}>Descripcion (opcional)</label>
               <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Informacion adicional del auto..." rows={3} maxLength={500} style={{ ...inputStyle, resize: "vertical" }} />
@@ -270,45 +313,6 @@ export default function Publicar() {
                 </button>
                 <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 11 }}>{form.descripcion.length}/500</span>
               </div>
-            </div>
-
-            <div>
-              <label style={labelStyle}>Fotos del auto (hasta 3)</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {fotos.map((foto, i) => (
-                  <div key={i}>
-                    <label style={{
-                      display: "flex", alignItems: "center", gap: 12,
-                      background: "rgba(255,255,255,0.06)",
-                      border: foto ? "0.5px solid rgba(255,69,0,0.4)" : "0.5px solid rgba(255,255,255,0.12)",
-                      borderRadius: 8, padding: "10px 14px", cursor: "pointer"
-                    }}>
-                      <span style={{
-                        background: foto ? "#ff4500" : "rgba(255,255,255,0.1)",
-                        color: "#fff",
-                        padding: "5px 14px", borderRadius: 6,
-                        fontSize: 12, fontWeight: 500, whiteSpace: "nowrap", flexShrink: 0
-                      }}>
-                        {LABELS[i]}
-                      </span>
-                      <span style={{ color: foto ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.3)", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {foto ? foto.name : "Sin archivo"}
-                      </span>
-                      {foto && (
-                        <button
-                          type="button"
-                          onClick={(e) => { e.preventDefault(); handleFoto(i, null); }}
-                          style={{ marginLeft: "auto", background: "none", border: "none", color: "rgba(255,255,255,0.3)", cursor: "pointer", fontSize: 16, flexShrink: 0 }}
-                        >
-                          ✕
-                        </button>
-                      )}
-                      <input type="file" accept=".jpg,.jpeg,.png,.webp,.heic,.heif" onChange={(e) => handleFoto(i, e.target.files[0] || null)} style={{ display: "none" }} />
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, marginTop: 6 }}>* Cada imagen no puede superar 1MB. Formatos permitidos: JPG, PNG, WEBP, HEIC</p>
             </div>
 
             {errorMsg && (
