@@ -304,11 +304,7 @@ export default function Admin() {
   }, [marca, modelo, anno, autos]);
 
   const cambiarEstado = async (id, estado) => {
-    await fetch("/api/editar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, datos: { estado } }),
-    });
+    await supabase.rpc("cambiar_estado_auto", { auto_id: id, p_estado: estado });
 
     if (estado === "aprobado") {
       const auto = autos.find((a) => a.id === id);
