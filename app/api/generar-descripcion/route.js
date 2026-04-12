@@ -8,18 +8,20 @@ export async function POST(req) {
 
     const textoDatos = `Marca: ${marca} | Modelo: ${modelo} | Año: ${anno} | Kilometraje: ${parseInt(km).toLocaleString()} km | Precio: USD ${parseFloat(precio).toLocaleString()}`;
 
-    const instruccion = `Generá una descripción atractiva para un anuncio de venta de vehículo usado en Argentina.
+    const instruccion = `Escribí la descripción de un anuncio de venta de vehículo usado en Argentina, en nombre del vendedor (primera persona).
 
 Datos del vehículo: ${textoDatos}
 ${fotoBase64 ? "Analizá la imagen para identificar el color del vehículo e incluilo en la descripción." : ""}
 
-Reglas:
-- Escribí en español rioplatense, tono amigable y directo
+Reglas estrictas:
+- Escribí en primera persona como si fueras el dueño del vehículo: "Vendo...", "El auto tiene...", "Cuenta con..."
+- Tono directo y técnico, sin exageraciones ni lenguaje emotivo
 - Máximo 400 caracteres
-- Incluí el color del vehículo${fotoBase64 ? " (obtenelo de la imagen)" : " si podés inferirlo"}
-- Destacá puntos fuertes según año y kilometraje
-- NO menciones el precio ni datos de contacto
-- NO uses frases como "excelente oportunidad" o "no te lo pierdas"
+- Incluí el color${fotoBase64 ? " (obtenelo de la imagen)" : ""}
+- Mencioná datos concretos: estado del vehículo, si tiene service al día, si es único dueño, etc. Solo si son razonablemente inferibles del año y km — no inventes datos
+- PROHIBIDO: frases pomposas, emocionales o de marketing como "no te lo pierdas", "te va a dar felicidad", "oportunidad única", "el auto de tus sueños"
+- PROHIBIDO: mencionar servicios que no corresponden al vendedor particular, como "vehículo verificado", "garantía incluida", "revisión técnica"
+- NO menciones el precio ni datos de contacto, eso ya figura en el anuncio
 - Devolvé solo el texto, sin comillas ni aclaraciones`;
 
     const messages = fotoBase64
