@@ -270,13 +270,13 @@ export default function Admin() {
   const [editForm, setEditForm] = useState({});
 
   const limpiarRechazados = async () => {
-    const hace15dias = new Date();
-    hace15dias.setDate(hace15dias.getDate() - 15);
+    const hace30dias = new Date();
+    hace30dias.setDate(hace30dias.getDate() - 30);
     await supabase
       .from("autos")
       .delete()
       .eq("estado", "rechazado")
-      .lt("created_at", hace15dias.toISOString());
+      .lt("created_at", hace30dias.toISOString());
   };
 
   const cargarAutos = async (estado) => {

@@ -28,7 +28,7 @@ export default function Privacidad() {
     {
       titulo: "Conservación de datos",
       contenido: [
-        "Los anuncios rechazados son eliminados automáticamente a los 15 días.",
+        "Los anuncios rechazados son eliminados automáticamente a los 30 días.",
         "Los anuncios aprobados permanecen publicados hasta que el vendedor solicite la baja o sean dados de baja por el equipo de moderación.",
         "Las fotografías asociadas a un anuncio eliminado son borradas de nuestros servidores.",
       ]

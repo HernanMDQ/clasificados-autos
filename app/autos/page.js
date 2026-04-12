@@ -14,6 +14,7 @@ function AutosContent() {
   const [autos, setAutos] = useState([]);
   const [filtrados, setFiltrados] = useState([]);
   const [marca, setMarca] = useState(searchParams.get("marca") || "");
+  const [modelo, setModelo] = useState(searchParams.get("modelo") || "");
   const [precioMax, setPrecioMax] = useState(searchParams.get("precioMax") || "");
   const [annoMin, setAnnoMin] = useState(searchParams.get("annoMin") || "");
 
@@ -33,12 +34,13 @@ function AutosContent() {
   useEffect(() => {
     let resultado = autos;
     if (marca.trim()) resultado = resultado.filter((a) => a.marca.toLowerCase().includes(marca.toLowerCase()));
+    if (modelo.trim()) resultado = resultado.filter((a) => a.modelo.toLowerCase().includes(modelo.toLowerCase()));
     if (precioMax) resultado = resultado.filter((a) => a.precio <= parseFloat(precioMax));
     if (annoMin) resultado = resultado.filter((a) => a.ano >= parseInt(annoMin));
     setFiltrados(resultado);
-  }, [marca, precioMax, annoMin, autos]);
+  }, [marca, modelo, precioMax, annoMin, autos]);
 
-  const limpiarFiltros = () => { setMarca(""); setPrecioMax(""); setAnnoMin(""); };
+  const limpiarFiltros = () => { setMarca(""); setModelo(""); setPrecioMax(""); setAnnoMin(""); };
 
   const inputStyle = {
     background: "rgba(255,255,255,0.06)",
@@ -80,6 +82,10 @@ function AutosContent() {
           <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
             <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Marca</label>
             <input value={marca} onChange={(e) => setMarca(e.target.value)} placeholder="Ej: Toyota" style={inputStyle} />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
+            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Modelo</label>
+            <input value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ej: Hilux" style={inputStyle} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
             <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Precio maximo (USD)</label>
