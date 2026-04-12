@@ -323,12 +323,16 @@ export default function Admin() {
 
   const eliminar = async (id) => {
     if (!confirm("Seguro que queres eliminar este anuncio?")) return;
-    const auto = autos.find((a) => a.id === id);
-    await fetch("/api/eliminar", {
+    const res = await fetch("/api/eliminar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, foto_url: auto?.foto_url }),
+      body: JSON.stringify({ id }),
     });
+    const json = await res.json();
+    if (!json.ok) {
+      alert("Error al eliminar: " + json.error);
+      return;
+    }
     cargarAutos(pestana);
   };
 

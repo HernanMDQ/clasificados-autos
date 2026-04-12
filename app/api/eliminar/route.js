@@ -14,7 +14,9 @@ export async function POST(req) {
       return Response.json({ ok: true });
     }
 
-    await supabase.from("autos").delete().eq("id", body.id);
+    const { error } = await supabase.rpc("eliminar_auto", { auto_id: body.id });
+
+    if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
     return Response.json({ ok: true });
   } catch (error) {
