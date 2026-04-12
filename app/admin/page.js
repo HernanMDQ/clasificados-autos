@@ -380,7 +380,8 @@ export default function Admin() {
     for (const campo of ["foto_url", "foto_url_2", "foto_url_3"]) {
       if (editFotos[campo]) {
         try {
-          datos[campo] = await subirFotoAdmin(editFotos[campo]);
+          const url = await subirFotoAdmin(editFotos[campo]);
+          await supabase.rpc("actualizar_foto_auto", { auto_id: editando, campo, url });
         } catch (err) {
           alert("Error al subir foto: " + err.message);
           return;
@@ -540,11 +541,7 @@ export default function Admin() {
                         if (!archivo) return;
                         try {
                           const url = await subirFotoAdmin(archivo);
-                          await fetch("/api/editar", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ id: auto.id, datos: { [campo]: url } }),
-                          });
+                          await supabase.rpc("actualizar_foto_auto", { auto_id: auto.id, campo, url });
                           cargarAutos(pestana);
                         } catch (err) {
                           alert("Error al subir foto: " + err.message);
