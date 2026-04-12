@@ -75,7 +75,7 @@ export default function Home() {
           Encontra tu proximo auto<br />en <span style={{ color: "#ff4500" }}>Concordia</span>
         </h1>
         <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 14, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px", lineHeight: 1.65 }}>
-          Encontra tu proximo auto o publica gratis tu anuncio para Concordia y la región
+          Compradores y vendedores de Concordia y Entre Ríos en un solo lugar, potenciado con inteligencia artificial. Sin comisiones, sin intermediarios.
         </p>
 
         {/* CHAT */}
