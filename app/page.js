@@ -9,6 +9,8 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef(null);
+  const chatBoxRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (messages.length > 1 && chatContainerRef.current) {
@@ -18,6 +20,8 @@ export default function Home() {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+    inputRef.current?.blur();
+    chatBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     const userMessage = { role: "user", text: input };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
@@ -73,7 +77,7 @@ export default function Home() {
         </p>
 
         {/* CHAT */}
-        <div style={{
+        <div ref={chatBoxRef} style={{
           background: "rgba(255,255,255,0.03)",
           border: "0.5px solid rgba(255,255,255,0.09)",
           borderRadius: 14,
@@ -128,6 +132,7 @@ export default function Home() {
           </div>
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
