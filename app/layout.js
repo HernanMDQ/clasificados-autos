@@ -1,6 +1,9 @@
 import "./globals.css";
 import BotonWA from "./components/BotonWA";
 import NavBar from "./components/NavBar";
+import Script from "next/script";
+
+const GA_ID = "G-9NFLBQR2NH";
 
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autosconcordia.com.ar";
@@ -24,12 +27,22 @@ export const metadata = {
     description: "Encontra tu proximo auto o publicalo gratis para Concordia y la región",
     images: [OG_IMAGE],
   },
+  verification: {
+    google: "hKj_yj2scSPPhYBLviPWmwHBseTxyQKNRzUBqYXejVc",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-<body className="overflow-x-hidden">
+      <body className="overflow-x-hidden">
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}</Script>
         <NavBar />
                 {children}
         <BotonWA />
