@@ -8,11 +8,11 @@ export default function Home() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
-    if (messages.length > 1) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 1 && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
@@ -42,12 +42,6 @@ export default function Home() {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") sendMessage();
   };
-
-  const ejemplos = [
-    "Busco una pickup hasta USD 20.000",
-    "Quiero un auto familiar del 2019 en adelante",
-    "Tenes algo automatico por menos de USD 15.000?",
-  ];
 
   return (
     <main style={{ background: "#0d1520", minHeight: "100vh" }}>
@@ -97,7 +91,7 @@ export default function Home() {
               Nueva conversacion
             </button>
           </div>
-          <div style={{ height: 200, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+          <div ref={chatContainerRef} style={{ height: 200, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
             {messages.map((msg, i) => (
               <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
                 <div style={{
@@ -131,7 +125,6 @@ export default function Home() {
                 </div>
               </div>
             )}
-            <div ref={bottomRef} />
           </div>
           <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
             <input
@@ -157,25 +150,6 @@ export default function Home() {
             >
               Enviar
             </button>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {ejemplos.map((ej, i) => (
-              <button
-                key={i}
-                onClick={() => setInput(ej)}
-                style={{
-                  background: "rgba(255,69,0,0.08)",
-                  color: "#ff6b35",
-                  border: "0.5px solid rgba(255,69,0,0.2)",
-                  borderRadius: 99,
-                  padding: "4px 12px",
-                  fontSize: 12,
-                  cursor: "pointer"
-                }}
-              >
-                {ej}
-              </button>
-            ))}
           </div>
         </div>
 
