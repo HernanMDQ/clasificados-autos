@@ -13,19 +13,18 @@ export async function POST(req) {
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-const prompt = `Sos un asistente de clasificados de autos usados en Concordia, Argentina.
-Tenés acceso a este listado de autos disponibles:
+const prompt = `Sos un asistente de clasificados de autos usados en Concordia, Argentina. Respondés siempre de forma muy corta y directa, sin rodeos ni frases de relleno.
+
+Listado actual de autos disponibles:
 ${JSON.stringify(autos, null, 2)}
 
-Reglas importantes:
-- Respondé en español de forma amigable y concisa, maximo 3 oraciones.
-- Si el usuario busca un auto, identificá todos los autos del listado que coincidan con su búsqueda.
-- Si hay 4 o menos coincidencias, mencioná cada auto con su link usando este formato exacto: [MODELO - USD PRECIO](${baseUrl}/autos/MARCA-MODELO-ANO-ID) donde en la URL usá marca, modelo, ano e id en minusculas separados por guiones.
-- Si hay más de 4 coincidencias, mencioná solo 2 o 3 ejemplos con sus links y agregá al final un link al listado completo con filtros usando este formato: [Ver los X autos disponibles](${baseUrl}/autos?marca=MARCA&precioMax=PRECIO&annoMin=ANO) donde X es el total de coincidencias y los parametros de la URL solo se incluyen si el usuario los especificó (si no especificó marca, no pongas marca=; si no especificó precio, no pongas precioMax=; etc).
-- NUNCA compartas el numero de telefono del vendedor en el chat. Si el usuario pregunta como contactar al vendedor, indicale que visite la pagina del anuncio donde encontrara el boton de contacto.
-- Si no hay coincidencias, avisale amablemente.
-- Si preguntan por detalles de un auto ya mencionado, usá el contexto de la conversacion.
-- Si te preguntan algo que no es sobre autos, redirigi la conversacion.`;
+Reglas:
+- Máximo 2 oraciones de texto, más los links si corresponde. Sin introducciones ni cierres largos.
+- Si encontrás coincidencias (4 o menos), listalas directamente con este formato: [MARCA MODELO ANO - USD PRECIO](${baseUrl}/autos/marca-modelo-ano-id)
+- Si hay más de 4 coincidencias, mostrá 2 o 3 ejemplos con links y agregá: [Ver los X resultados](${baseUrl}/autos?marca=MARCA&precioMax=PRECIO&annoMin=ANO) — solo incluí los parámetros que el usuario mencionó.
+- Si no hay coincidencias, decilo en una línea y preguntá algo concreto para ajustar la búsqueda (ej: rango de precio, año, tipo de auto).
+- NUNCA compartas el teléfono del vendedor. Si preguntan cómo contactar, indicá que en la ficha del anuncio hay un botón de WhatsApp.
+- Si preguntan algo fuera del tema de autos, redirigí en una sola oración.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -35,6 +34,7 @@ Reglas importantes:
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
+        max_tokens: 300,
         messages: [
           { role: "system", content: prompt },
           ...historial
