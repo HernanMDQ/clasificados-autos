@@ -77,8 +77,8 @@ export default function Home() {
           background: "rgba(255,255,255,0.03)",
           border: "0.5px solid rgba(255,255,255,0.09)",
           borderRadius: 14,
-          padding: 16,
-          maxWidth: 480,
+          padding: 20,
+          maxWidth: 580,
           margin: "0 auto",
           textAlign: "left"
         }}>
@@ -91,7 +91,7 @@ export default function Home() {
               Nueva conversacion
             </button>
           </div>
-          <div ref={chatContainerRef} style={{ height: 200, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+          <div ref={chatContainerRef} style={{ height: 280, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
             {messages.map((msg, i) => (
               <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
                 <div style={{
