@@ -50,6 +50,14 @@ export default function Descargo() {
       ]
     },
     {
+      titulo: "Uso de imágenes en redes sociales",
+      contenido: [
+        "Al publicar un anuncio en Autos Concordia, el usuario acepta que las fotografías incluidas en dicha publicación podrán ser utilizadas por Autos Concordia en sus redes sociales (Instagram, Facebook y similares).",
+        "El uso de estas imágenes tiene como único fin promocionar el anuncio y dar visibilidad al vehículo publicado, contribuyendo así a una mayor difusión tanto del aviso como del sitio.",
+        "Autos Concordia no utilizará las imágenes con fines comerciales propios ni las cederá a terceros. En caso de que el usuario no desee que sus fotos sean utilizadas de esta manera, puede indicarlo al momento de publicar o contactarnos para solicitarlo.",
+      ]
+    },
+    {
       titulo: "Contacto ante inconvenientes",
       contenido: [
         "Si tuviste un problema con un vendedor o detectaste información falsa en un anuncio, podés contactarnos por WhatsApp a través del botón de soporte disponible en el sitio.",
