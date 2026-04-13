@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const WA_NUMBER = "+543454045864";
+const WA_NUMBER = "+543454174904";
 
 export default function Contacto() {
   const [form, setForm] = useState({ nombre: "", email: "", asunto: "", mensaje: "" });

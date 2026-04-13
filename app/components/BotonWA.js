@@ -6,7 +6,7 @@ export default function BotonWA() {
 
   return (
     
-      <a href="https://wa.me/543454045864"
+      <a href="https://wa.me/543454174904"
       target="_blank"
       style={{ position: "fixed", bottom: 24, right: 24, zIndex: 50, display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}
       onMouseEnter={() => setHover(true)}
