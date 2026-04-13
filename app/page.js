@@ -210,7 +210,7 @@ export default function Home() {
           <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, textTransform: "uppercase", letterSpacing: 1, marginBottom: 16, textAlign: "center" }}>
             Como funciona
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             {[
               { icon: "🔍", title: "Busca con IA", desc: "Contanos que auto necesitas en lenguaje natural" },
               { icon: "📋", title: "Explora el listado", desc: "Filtra por marca, precio y año facilmente" },
