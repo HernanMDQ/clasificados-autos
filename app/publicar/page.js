@@ -11,6 +11,23 @@ const LABELS = ["Frente *", "Lateral", "Trasera"];
 const TIPOS_PERMITIDOS = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
 const TIPOS_LEGIBLES = "JPG, PNG, WEBP o HEIC";
 
+const MARCAS = [
+  "Acura", "Alfa Romeo", "Aston Martin", "Audi", "BAIC", "BAW", "Bentley", "BMW", "BYD",
+  "Cadillac", "Changan", "Chery", "Chevrolet", "Chrysler", "Citroen", "Daewoo",
+  "Daihatsu", "Dodge", "DS", "Ferrari", "Fiat", "Ford", "Foton", "GAC", "Geely", "Genesis",
+  "GMC", "GWM", "Haval", "Honda", "Hyundai", "Isuzu", "Iveco", "JAC", "Jaecoo", "Jaguar",
+  "Jeep", "Jetour", "Karry", "Kia", "Lamborghini", "Land Rover", "Leapmotor", "Lexus",
+  "Lifan", "Maserati", "Mazda", "Mercedes-Benz", "MG", "Mini", "Mitsubishi", "Nissan",
+  "Omoda", "Peugeot", "Porsche", "RAM", "Rely", "Renault", "Rolls-Royce", "Saab", "Seat",
+  "Shineray", "Skoda", "Smart", "SsangYong", "Subaru", "Suzuki", "Toyota", "Volkswagen",
+  "Volvo", "Zotye",
+];
+
+const normalizarMarca = (valor) => {
+  const buscada = valor.trim().toLowerCase();
+  return MARCAS.find((m) => m.toLowerCase() === buscada) || null;
+};
+
 export default function Publicar() {
   const [form, setForm] = useState({
     marca: "", modelo: "", anno: "", km: "", precio: "", telefono: "", descripcion: ""
@@ -126,6 +143,11 @@ export default function Publicar() {
       setErrorMsg("Por favor completa todos los campos obligatorios");
       return;
     }
+    const marcaNormalizada = normalizarMarca(form.marca);
+    if (!marcaNormalizada) {
+      setErrorMsg("Seleccioná una marca de la lista desplegable. Si no encontrás la tuya, escribinos por WhatsApp.");
+      return;
+    }
     const telefonoNormalizado = normalizarTelefono(form.telefono);
     if (!/^\d{10}$/.test(telefonoNormalizado)) {
       setErrorMsg("El teléfono debe tener 10 dígitos. Ejemplo: 3454123456 (sin 0 ni +54)");
@@ -157,7 +179,7 @@ export default function Publicar() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          marca: capitalizarPalabras(form.marca), modelo: capitalizarPalabras(form.modelo),
+          marca: marcaNormalizada, modelo: capitalizarPalabras(form.modelo),
           ano: parseInt(form.anno), kilometros: normalizarKm(form.km),
           precio: normalizarPrecio(form.precio),
           telefono: telefonoNormalizado, descripcion: form.descripcion,
@@ -224,7 +246,7 @@ export default function Publicar() {
               <label style={labelStyle}>Marca *</label>
               <input name="marca" value={form.marca} onChange={handleChange} placeholder="Ej: Toyota" list="lista-marcas" style={inputStyle} />
               <datalist id="lista-marcas">
-                {["Toyota","Ford","Chevrolet","Volkswagen","Renault","Peugeot","Fiat","Honda","Nissan","Hyundai","Kia","Citroen","Mercedes-Benz","BMW","Audi","Jeep","Dodge","Ram","Mitsubishi","Subaru","Suzuki","Mazda"].map(m => (
+                {MARCAS.map(m => (
                   <option key={m} value={m} />
                 ))}
               </datalist>
