@@ -38,6 +38,7 @@ export default function Publicar() {
   const [errorMsg, setErrorMsg] = useState("");
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [generando, setGenerando] = useState(false);
+  const [mostrarMarcas, setMostrarMarcas] = useState(false);
 
   const toBase64 = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -74,6 +75,33 @@ export default function Publicar() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrorMsg("");
+  };
+
+  const marcasFiltradas = MARCAS.filter((m) =>
+    m.toLowerCase().startsWith(form.marca.trim().toLowerCase())
+  );
+
+  const handleMarcaChange = (e) => {
+    const valor = e.target.value;
+    // Solo deja escribir si lo tipeado puede seguir siendo el prefijo de alguna marca de la lista
+    if (valor === "" || MARCAS.some((m) => m.toLowerCase().startsWith(valor.trim().toLowerCase()))) {
+      setForm({ ...form, marca: valor });
+    }
+    setMostrarMarcas(true);
+    setErrorMsg("");
+  };
+
+  const elegirMarca = (m) => {
+    setForm({ ...form, marca: m });
+    setMostrarMarcas(false);
+  };
+
+  const handleMarcaBlur = () => {
+    // Da tiempo a que el click en una opcion (onMouseDown) se procese antes de cerrar
+    setTimeout(() => {
+      setMostrarMarcas(false);
+      setForm((prev) => ({ ...prev, marca: normalizarMarca(prev.marca) || "" }));
+    }, 150);
   };
 
   const handleFoto = (index, archivo) => {
@@ -242,14 +270,38 @@ export default function Publicar() {
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div>
+            <div style={{ position: "relative" }}>
               <label style={labelStyle}>Marca *</label>
-              <input name="marca" value={form.marca} onChange={handleChange} placeholder="Ej: Toyota" list="lista-marcas" style={inputStyle} />
-              <datalist id="lista-marcas">
-                {MARCAS.map(m => (
-                  <option key={m} value={m} />
-                ))}
-              </datalist>
+              <input
+                name="marca"
+                value={form.marca}
+                onChange={handleMarcaChange}
+                onFocus={() => setMostrarMarcas(true)}
+                onBlur={handleMarcaBlur}
+                placeholder="Ej: Toyota"
+                autoComplete="off"
+                style={inputStyle}
+              />
+              {mostrarMarcas && marcasFiltradas.length > 0 && (
+                <div style={{
+                  position: "absolute", top: "100%", left: 0, right: 0, marginTop: 4,
+                  background: "#182437", border: "0.5px solid rgba(255,255,255,0.12)",
+                  borderRadius: 8, maxHeight: 190, overflowY: "auto", zIndex: 10
+                }}>
+                  {marcasFiltradas.map((m) => (
+                    <div
+                      key={m}
+                      onMouseDown={() => elegirMarca(m)}
+                      style={{
+                        padding: "9px 14px", fontSize: 14, color: "#fff", cursor: "pointer",
+                        borderBottom: "0.5px solid rgba(255,255,255,0.06)"
+                      }}
+                    >
+                      {m}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <label style={labelStyle}>Modelo *</label>
