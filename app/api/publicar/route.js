@@ -24,6 +24,20 @@ export async function POST(req) {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
+    // Un vehiculo por persona: se chequea aca porque el navegador solo ve los aprobados
+    const { data: existente } = await supabase
+      .from("autos")
+      .select("id")
+      .eq("telefono", datos.telefono)
+      .in("estado", ["aprobado", "pendiente"])
+      .limit(1);
+    if (existente?.length) {
+      return Response.json(
+        { ok: false, error: "Ya existe un auto con este numero de telefono. Solo se permite un vehiculo por persona." },
+        { status: 409 }
+      );
+    }
+
     const { error } = await supabase.from("autos").insert([datos]);
 
     if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
