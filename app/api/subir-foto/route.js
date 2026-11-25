@@ -4,7 +4,21 @@ export async function POST(req) {
   try {
     const formData = await req.formData();
     const archivo = formData.get("archivo");
-    const nombre = formData.get("nombre");
+    const nombreOriginal = String(formData.get("nombre") || "foto");
+
+    if (!archivo || typeof archivo.arrayBuffer !== "function") {
+      return Response.json({ ok: false, error: "Archivo invalido" }, { status: 400 });
+    }
+    // algunos navegadores mandan HEIC sin tipo MIME
+    const esHeicSinTipo = !archivo.type && /\.(heic|heif)$/i.test(nombreOriginal);
+    if (!/^image\//.test(archivo.type) && !esHeicSinTipo) {
+      return Response.json({ ok: false, error: "Solo se permiten imagenes" }, { status: 400 });
+    }
+    if (archivo.size > 15 * 1024 * 1024) {
+      return Response.json({ ok: false, error: "La imagen supera los 15 MB" }, { status: 400 });
+    }
+    // sin barras ni caracteres raros: evita escribir en otras carpetas del bucket
+    const nombre = nombreOriginal.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 150);
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,

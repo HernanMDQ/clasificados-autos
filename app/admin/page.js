@@ -1,14 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
-const PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-const USER = process.env.NEXT_PUBLIC_ADMIN_USER;
+// Acciones de admin: se ejecutan en el servidor, que verifica la sesion
+const accionAdmin = async (body) => {
+  const res = await fetch("/api/admin-accion", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || "Error");
+};
 
 const s = {
   page: {
@@ -304,7 +306,12 @@ export default function Admin() {
   }, [marca, modelo, anno, autos]);
 
   const cambiarEstado = async (id, estado) => {
-    await supabase.rpc("cambiar_estado_auto", { auto_id: id, p_estado: estado });
+    try {
+      await accionAdmin({ accion: "cambiar_estado", id, estado });
+    } catch (err) {
+      alert("Error al cambiar estado: " + err.message);
+      return;
+    }
 
     if (estado === "aprobado") {
       const auto = autos.find((a) => a.id === id);
@@ -338,7 +345,11 @@ export default function Admin() {
 
   const eliminarFoto = async (id, campo) => {
     if (!confirm("¿Eliminar esta foto?")) return;
-    await supabase.rpc("eliminar_foto_auto", { auto_id: id, campo });
+    try {
+      await accionAdmin({ accion: "eliminar_foto", id, campo });
+    } catch (err) {
+      alert("Error al eliminar foto: " + err.message);
+    }
     cargarAutos(pestana);
   };
 
@@ -385,7 +396,7 @@ export default function Admin() {
       if (editFotos[campo]) {
         try {
           const url = await subirFotoAdmin(editFotos[campo]);
-          await supabase.rpc("actualizar_foto_auto", { auto_id: editando, campo, url });
+          await accionAdmin({ accion: "actualizar_foto", id: editando, campo, url });
         } catch (err) {
           alert("Error al subir foto: " + err.message);
           return;
@@ -407,14 +418,33 @@ export default function Admin() {
     cargarAutos(pestana);
   };
 
-  const handleLogin = () => {
-    if (usuario === USER && password === PASSWORD) {
-      setAutenticado(true);
-      setError("");
-    } else {
-      setError("Usuario o contrasena incorrectos");
+  const handleLogin = async () => {
+    setError("");
+    try {
+      const res = await fetch("/api/admin-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuario, password }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        setPassword("");
+        setAutenticado(true);
+      } else {
+        setError(json.error || "Usuario o contrasena incorrectos");
+      }
+    } catch {
+      setError("Error de conexion");
     }
   };
+
+  // Si ya hay una sesion valida (cookie), entrar directo
+  useEffect(() => {
+    fetch("/api/admin-login")
+      .then((r) => r.json())
+      .then((j) => j.ok && setAutenticado(true))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (autenticado) {
@@ -545,7 +575,7 @@ export default function Admin() {
                         if (!archivo) return;
                         try {
                           const url = await subirFotoAdmin(archivo);
-                          await supabase.rpc("actualizar_foto_auto", { auto_id: auto.id, campo, url });
+                          await accionAdmin({ accion: "actualizar_foto", id: auto.id, campo, url });
                           cargarAutos(pestana);
                         } catch (err) {
                           alert("Error al subir foto: " + err.message);

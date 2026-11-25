@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
+import { esAdmin, noAutorizado } from "@/lib/adminAuth";
 
 export async function GET(req) {
+  if (!esAdmin(req)) return noAutorizado();
   try {
     const { searchParams } = new URL(req.url);
     const estado = searchParams.get("estado");

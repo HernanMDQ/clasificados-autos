@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
+import { esAdmin, noAutorizado } from "@/lib/adminAuth";
 
 export async function POST(req) {
+  if (!esAdmin(req)) return noAutorizado();
   try {
     const { id, datos } = await req.json();
 
