@@ -7,7 +7,7 @@ const GA_ID = "G-9NFLBQR2NH";
 
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://autosconcordia.com.ar";
-const OG_IMAGE = "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png";
+const OG_IMAGE = "https://autosconcordia.com.ar/logo-ac-white.png";
 
 export const metadata = {
   title: "Autos Concordia | Venta de usados y compras con IA",

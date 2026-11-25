@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
 
   const title = `${auto.marca} ${auto.modelo} ${auto.ano} – USD ${auto.precio?.toLocaleString()} | Autos Concordia`;
   const description = `${auto.marca} ${auto.modelo} ${auto.ano}, ${auto.kilometros?.toLocaleString()} km. Publicado en Autos Concordia, Concordia Entre Ríos.`;
-  const image = auto.foto_url || "https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png";
+  const image = auto.foto_url || "https://autosconcordia.com.ar/logo-ac-white.png";
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-");
 
   return {

@@ -17,7 +17,7 @@ export default function NavBar() {
       }}>
         <a href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
           <img
-            src="https://vxqcaybsjnrhyfdlmytg.supabase.co/storage/v1/object/public/assets/logo-ac-white.png"
+            src="/logo-ac-white.png"
             alt="Autos Concordia"
             style={{ height: 36, width: "auto", objectFit: "contain" }}
           />
