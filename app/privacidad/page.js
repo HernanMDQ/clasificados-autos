@@ -6,6 +6,8 @@ export default function Privacidad() {
         "Número de teléfono del vendedor, utilizado exclusivamente para que los interesados puedan contactarse.",
         "Fotografías del vehículo publicado.",
         "Datos del vehículo: marca, modelo, año, kilometraje, precio y descripción proporcionada por el usuario.",
+        "Si nos escribís desde el formulario de contacto: tu nombre, correo electrónico y el contenido de tu mensaje.",
+        "Datos de navegación recopilados por Google Analytics mediante cookies (páginas visitadas, tipo de dispositivo, navegador y ubicación aproximada), que usamos de forma agregada para entender cómo se usa el sitio.",
       ]
     },
     {
@@ -13,8 +15,19 @@ export default function Privacidad() {
       contenido: [
         "El número de teléfono se muestra en el anuncio para facilitar el contacto entre comprador y vendedor.",
         "Las fotografías se publican en el anuncio y se almacenan en nuestros servidores mientras el anuncio esté activo.",
-        "No compartimos datos personales con terceros ni los utilizamos con fines publicitarios.",
-        "No vendemos ni cedemos información personal bajo ninguna circunstancia.",
+        "Las fotografías de los anuncios pueden difundirse en nuestras redes sociales, según lo indicado en el descargo de responsabilidad.",
+        "Los datos del formulario de contacto se usan únicamente para responder tu consulta.",
+        "No vendemos ni cedemos información personal bajo ninguna circunstancia, ni la utilizamos con fines publicitarios.",
+      ]
+    },
+    {
+      titulo: "Servicios de terceros",
+      contenido: [
+        "Para funcionar, el sitio utiliza proveedores externos que procesan datos únicamente para prestarnos su servicio:",
+        "Vercel (alojamiento del sitio) y Supabase (base de datos y almacenamiento de fotografías).",
+        "Google Analytics (estadísticas de visitas). Podés bloquear sus cookies desde la configuración de tu navegador.",
+        "Groq (inteligencia artificial): solo si usás la opción \"Generar descripción con IA\", se le envían los datos del vehículo y, si la cargaste, la primera foto. No se envía tu número de teléfono.",
+        "Gmail (Google): recepción de los mensajes enviados desde el formulario de contacto.",
       ]
     },
     {
@@ -31,6 +44,7 @@ export default function Privacidad() {
         "Los anuncios rechazados son eliminados automáticamente a los 30 días.",
         "Los anuncios aprobados permanecen publicados hasta que el vendedor solicite la baja o sean dados de baja por el equipo de moderación.",
         "Las fotografías asociadas a un anuncio eliminado son borradas de nuestros servidores.",
+        "Los mensajes del formulario de contacto se conservan en nuestra casilla de correo el tiempo necesario para atender la consulta.",
       ]
     },
     {
@@ -58,10 +72,18 @@ export default function Privacidad() {
       ]
     },
     {
+      titulo: "Tus derechos",
+      contenido: [
+        "De acuerdo con la Ley N° 25.326 de Protección de los Datos Personales, podés solicitar el acceso, la rectificación, la actualización o la supresión de tus datos contactándonos por los medios indicados en esta página.",
+        "El titular de los datos personales tiene la facultad de ejercer el derecho de acceso a los mismos en forma gratuita a intervalos no inferiores a seis meses, salvo que se acredite un interés legítimo al efecto conforme lo establecido en el artículo 14, inciso 3 de la Ley N° 25.326.",
+        "La Agencia de Acceso a la Información Pública, en su carácter de Órgano de Control de la Ley N° 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.",
+      ]
+    },
+    {
       titulo: "Contacto",
       contenido: [
         "Para consultas relacionadas con privacidad o solicitudes de eliminación de datos, contactanos por WhatsApp a través del botón de soporte disponible en el sitio.",
-        "También podés escribirnos directamente y te responderemos a la brevedad.",
+        "También podés escribirnos desde el formulario de la página de contacto y te responderemos a la brevedad.",
       ]
     },
   ];
@@ -108,7 +130,7 @@ export default function Privacidad() {
             padding: "16px 20px"
           }}>
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, lineHeight: 1.6 }}>
-              Ultima actualizacion: marzo 2026. Autos Concordia se reserva el derecho de modificar estas politicas en cualquier momento. Los cambios seran notificados a traves del sitio.
+              Ultima actualizacion: noviembre 2026. Autos Concordia se reserva el derecho de modificar estas politicas en cualquier momento. Los cambios seran notificados a traves del sitio.
             </p>
           </div>
         </div>

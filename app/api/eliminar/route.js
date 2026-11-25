@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { esAdmin, noAutorizado } from "@/lib/adminAuth";
+import { CAMPOS_FOTO, eliminarAutosConFotos, limpiarRechazadosViejos } from "@/lib/fotos";
 
 export async function POST(req) {
   if (!esAdmin(req)) return noAutorizado();
@@ -12,12 +13,20 @@ export async function POST(req) {
     );
 
     if (body.limpiar_rechazados) {
-      await supabase.from("autos").delete().eq("estado", "rechazado").lt("created_at", body.fecha);
+      const { error } = await limpiarRechazadosViejos(supabase);
+      if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
       return Response.json({ ok: true });
     }
 
-    const { error } = await supabase.rpc("eliminar_auto", { auto_id: body.id });
+    const { data: auto, error: errBuscar } = await supabase
+      .from("autos")
+      .select(`id, ${CAMPOS_FOTO.join(", ")}`)
+      .eq("id", body.id)
+      .maybeSingle();
+    if (errBuscar) return Response.json({ ok: false, error: errBuscar.message }, { status: 500 });
+    if (!auto) return Response.json({ ok: false, error: "El anuncio no existe" }, { status: 404 });
 
+    const { error } = await eliminarAutosConFotos(supabase, [auto]);
     if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
     return Response.json({ ok: true });

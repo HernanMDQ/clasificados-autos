@@ -1,7 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
+import { limpiarRechazadosViejos } from "@/lib/fotos";
 
-// Llamado a diario por Vercel Cron (ver vercel.json) para que Supabase
-// no pause el proyecto por inactividad (plan gratuito: 7 dias sin uso).
+// Llamado a diario por Vercel Cron (ver vercel.json):
+// - mantiene activo Supabase (el plan gratuito pausa tras 7 dias sin uso)
+// - borra anuncios rechazados con mas de 30 dias, junto con sus fotos
 export const dynamic = "force-dynamic";
 
 export async function GET(req) {
@@ -13,11 +15,11 @@ export async function GET(req) {
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
-  const { error } = await supabase.from("autos").select("id").limit(1);
+  const { error, borrados } = await limpiarRechazadosViejos(supabase);
   if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
-  return Response.json({ ok: true, at: new Date().toISOString() });
+  return Response.json({ ok: true, rechazados_borrados: borrados, at: new Date().toISOString() });
 }

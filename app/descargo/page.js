@@ -3,9 +3,17 @@ export default function Descargo() {
     {
       titulo: "Responsabilidad sobre el contenido publicado",
       contenido: [
-        "Toda la información incluida en los anuncios (precio, estado del vehículo, kilometraje, fotografías y descripción) es ingresada exclusivamente por el usuario que realiza la publicación.",
+        "Toda la información incluida en los anuncios (precio, estado del vehículo, kilometraje, fotografías y descripción) es provista por el vendedor, ya sea que la ingrese directamente o a través de una publicación asistida.",
         "Autos Concordia no verifica, valida ni garantiza la veracidad, exactitud o integridad de los datos proporcionados por los vendedores.",
         "Revisamos los anuncios antes de publicarlos para detectar contenido inapropiado o claramente fraudulento, pero esta moderación no implica una certificación de la información declarada.",
+      ]
+    },
+    {
+      titulo: "Publicaciones asistidas",
+      contenido: [
+        "Algunas publicaciones pueden ser cargadas por el equipo de Autos Concordia a pedido y con autorización del vendedor, con datos y fotografías provistos o aprobados por él.",
+        "En esos casos el vendedor sigue siendo responsable por la veracidad de la información publicada.",
+        "Una vez publicado el aviso, el vendedor recibe el enlace a su anuncio junto con estas condiciones y la política de privacidad, y puede solicitar la baja en cualquier momento.",
       ]
     },
     {
@@ -54,14 +62,14 @@ export default function Descargo() {
       contenido: [
         "Al publicar un anuncio en Autos Concordia, el usuario acepta que las fotografías incluidas en dicha publicación podrán ser utilizadas por Autos Concordia en sus redes sociales (Instagram, Facebook y similares).",
         "El uso de estas imágenes tiene como único fin promocionar el anuncio y dar visibilidad al vehículo publicado, contribuyendo así a una mayor difusión tanto del aviso como del sitio.",
-        "Autos Concordia no utilizará las imágenes con fines comerciales propios ni las cederá a terceros. En caso de que el usuario no desee que sus fotos sean utilizadas de esta manera, puede indicarlo al momento de publicar o contactarnos para solicitarlo.",
+        "Autos Concordia no utilizará las imágenes con fines comerciales propios ni las cederá a terceros. En caso de que el usuario no desee que sus fotos sean utilizadas de esta manera, puede solicitarlo en cualquier momento contactándonos por WhatsApp o desde la página de contacto.",
       ]
     },
     {
       titulo: "Contacto ante inconvenientes",
       contenido: [
         "Si tuviste un problema con un vendedor o detectaste información falsa en un anuncio, podés contactarnos por WhatsApp a través del botón de soporte disponible en el sitio.",
-        "Próximamente también estará disponible un correo electrónico de contacto para este tipo de consultas.",
+        "También podés escribirnos desde el formulario de la página de contacto.",
         "Evaluaremos cada caso y tomaremos las acciones que estén a nuestro alcance dentro del sitio, sin que esto implique responsabilidad legal de nuestra parte.",
       ]
     },
@@ -109,7 +117,7 @@ export default function Descargo() {
             padding: "16px 20px"
           }}>
             <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 12, lineHeight: 1.6 }}>
-              Ultima actualizacion: abril 2026. Autos Concordia se reserva el derecho de modificar este descargo en cualquier momento. El uso continuado del sitio implica la aceptación de las condiciones vigentes.
+              Ultima actualizacion: noviembre 2026. Autos Concordia se reserva el derecho de modificar este descargo en cualquier momento. El uso continuado del sitio implica la aceptación de las condiciones vigentes.
             </p>
           </div>
         </div>

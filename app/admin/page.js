@@ -319,8 +319,13 @@ export default function Admin() {
         const slug = `${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`
           .toLowerCase()
           .replace(/\s+/g, "-");
-        const url = `${process.env.NEXT_PUBLIC_SITE_URL}/autos/${slug}`;
-        const mensaje = `Tu anuncio fue aprobado! Ya podés verlo publicado aqui: ${url}`;
+        const sitio = process.env.NEXT_PUBLIC_SITE_URL;
+        const url = `${sitio}/autos/${slug}`;
+        const mensaje =
+          `¡Tu anuncio fue aprobado! Ya podés verlo publicado acá: ${url}\n\n` +
+          `Compartilo con tus contactos y en tus redes para que llegue a más gente.\n\n` +
+          `Al mantener tu aviso publicado aceptás nuestro descargo de responsabilidad (${sitio}/descargo) ` +
+          `y políticas de privacidad (${sitio}/privacidad). Si querés darlo de baja, respondé este mensaje.`;
         window.open(`https://wa.me/+54${auto.telefono}?text=${encodeURIComponent(mensaje)}`, "_blank");
       }
     }
