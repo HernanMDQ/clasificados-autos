@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { formatoPrecio, monedaDe } from "@/lib/precio";
 import FichaAuto from "./FichaAuto";
 
 const supabase = createClient(
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }) {
     return { title: "Auto no encontrado | Autos Concordia" };
   }
 
-  const title = `${auto.marca} ${auto.modelo} ${auto.ano} – USD ${auto.precio?.toLocaleString()} | Autos Concordia`;
+  const title = `${auto.marca} ${auto.modelo} ${auto.ano} – ${formatoPrecio(auto.precio, monedaDe(auto))} | Autos Concordia`;
   const description = `${auto.marca} ${auto.modelo} ${auto.ano}, ${auto.kilometros?.toLocaleString()} km. Publicado en Autos Concordia, Concordia Entre Ríos.`;
   const image = auto.foto_url || "https://autosconcordia.com.ar/logo-ac-white.png";
   const url = `${process.env.NEXT_PUBLIC_SITE_URL}/autos/${auto.marca}-${auto.modelo}-${auto.ano}-${auto.id}`.toLowerCase().replace(/\s+/g, "-");

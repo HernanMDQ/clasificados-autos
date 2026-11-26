@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { formatoPrecio, monedaDe, textoConversion, notaCotizacion } from "@/lib/precio";
+import { useCotizacion } from "@/lib/useCotizacion";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -15,6 +17,7 @@ export default function FichaAuto() {
   const [fotoActiva, setFotoActiva] = useState(0);
   const [popup, setPopup] = useState(false);
   const [copiado, setCopiado] = useState(false);
+  const cot = useCotizacion();
 
   useEffect(() => {
     const id = params.id.split("-").pop();
@@ -47,7 +50,7 @@ export default function FichaAuto() {
     if (navigator.share) {
       await navigator.share({
         title: `${auto.marca} ${auto.modelo} ${auto.ano}`,
-        text: `${auto.marca} ${auto.modelo} ${auto.ano} - USD ${auto.precio?.toLocaleString()}`,
+        text: `${auto.marca} ${auto.modelo} ${auto.ano} - ${formatoPrecio(auto.precio, monedaDe(auto))}`,
         url: urlFicha,
       });
     } else {
@@ -105,9 +108,19 @@ export default function FichaAuto() {
             <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 500, marginBottom: 8 }}>
               {auto.marca} {auto.modelo}
             </h1>
-            <p style={{ color: "#ff6b35", fontSize: 24, fontWeight: 500, marginBottom: 20 }}>
-              USD {auto.precio?.toLocaleString()}
+            <p style={{ color: "#ff6b35", fontSize: 24, fontWeight: 500, marginBottom: textoConversion(auto, cot) ? 4 : 20 }}>
+              {formatoPrecio(auto.precio, monedaDe(auto))}
             </p>
+            {textoConversion(auto, cot) && (
+              <div style={{ marginBottom: 20 }}>
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 14, marginBottom: 4 }}>
+                  {textoConversion(auto, cot)} *
+                </p>
+                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, lineHeight: 1.5 }}>
+                  * {notaCotizacion(cot)}
+                </p>
+              </div>
+            )}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 20 }}>
               {[
                 { label: "Año", value: auto.ano },

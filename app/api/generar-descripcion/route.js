@@ -1,12 +1,12 @@
 export async function POST(req) {
   try {
-    const { marca, modelo, anno, km, precio, fotoBase64 } = await req.json();
+    const { marca, modelo, anno, km, precio, moneda, fotoBase64 } = await req.json();
 
     if (!marca || !modelo || !anno || !km || !precio) {
       return Response.json({ error: "Faltan datos del vehículo" }, { status: 400 });
     }
 
-    const textoDatos = `Marca: ${marca} | Modelo: ${modelo} | Año: ${anno} | Kilometraje: ${parseInt(km).toLocaleString()} km | Precio: USD ${parseFloat(precio).toLocaleString()}`;
+    const textoDatos = `Marca: ${marca} | Modelo: ${modelo} | Año: ${anno} | Kilometraje: ${parseInt(km).toLocaleString()} km | Precio: ${moneda === "ARS" ? "$" : "USD"} ${parseFloat(precio).toLocaleString("es-AR")}`;
 
     const instruccion = `Escribí la descripción de un anuncio de venta de vehículo usado en Argentina, en nombre del vendedor (primera persona).
 

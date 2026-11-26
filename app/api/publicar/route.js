@@ -11,6 +11,7 @@ export async function POST(req) {
       ano: body.ano,
       kilometros: body.kilometros,
       precio: body.precio,
+      moneda: body.moneda === "ARS" ? "ARS" : "USD",
       telefono: body.telefono,
       descripcion: body.descripcion,
       foto_url: body.foto_url ?? null,

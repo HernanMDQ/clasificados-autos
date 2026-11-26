@@ -3,6 +3,8 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import Link from "next/link";
+import { formatoPrecio, monedaDe, convertir, textoConversion, notaCotizacion } from "@/lib/precio";
+import { useCotizacion } from "@/lib/useCotizacion";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -19,6 +21,8 @@ function AutosContent() {
   const [modelo, setModelo] = useState(searchParams.get("modelo") || "");
   const [precioMax, setPrecioMax] = useState(searchParams.get("precioMax") || "");
   const [annoMin, setAnnoMin] = useState(searchParams.get("annoMin") || "");
+  const [monedaFiltro, setMonedaFiltro] = useState(searchParams.get("moneda") === "ARS" ? "ARS" : "USD");
+  const cot = useCotizacion();
   const [pagina, setPagina] = useState(1);
 
   useEffect(() => {
@@ -38,11 +42,17 @@ function AutosContent() {
     let resultado = autos;
     if (marca.trim()) resultado = resultado.filter((a) => a.marca.toLowerCase().includes(marca.toLowerCase()));
     if (modelo.trim()) resultado = resultado.filter((a) => a.modelo.toLowerCase().includes(modelo.toLowerCase()));
-    if (precioMax) resultado = resultado.filter((a) => a.precio <= parseFloat(precioMax));
+    if (precioMax) {
+      // cada auto se lleva a la moneda del filtro (dolar oficial); sin cotizacion solo se comparan los de la misma moneda
+      resultado = resultado.filter((a) => {
+        const v = convertir(a.precio, monedaDe(a), monedaFiltro, cot);
+        return v != null && v <= parseFloat(precioMax);
+      });
+    }
     if (annoMin) resultado = resultado.filter((a) => a.ano >= parseInt(annoMin));
     setFiltrados(resultado);
     setPagina(1);
-  }, [marca, modelo, precioMax, annoMin, autos]);
+  }, [marca, modelo, precioMax, annoMin, monedaFiltro, cot, autos]);
 
   const limpiarFiltros = () => { setMarca(""); setModelo(""); setPrecioMax(""); setAnnoMin(""); };
 
@@ -116,8 +126,14 @@ function AutosContent() {
             <input value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Ej: Hilux" style={inputStyle} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 140 }}>
-            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Precio maximo (USD)</label>
-            <input value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} placeholder="Ej: 20000" type="number" style={inputStyle} />
+            <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Precio maximo</label>
+            <div style={{ display: "flex", gap: 6 }}>
+              <select value={monedaFiltro} onChange={(e) => setMonedaFiltro(e.target.value)} style={{ ...inputStyle, width: "auto", cursor: "pointer" }}>
+                <option value="USD" style={{ color: "#000" }}>USD</option>
+                <option value="ARS" style={{ color: "#000" }}>$</option>
+              </select>
+              <input value={precioMax} onChange={(e) => setPrecioMax(e.target.value)} placeholder={monedaFiltro === "ARS" ? "Ej: 25000000" : "Ej: 20000"} type="number" style={inputStyle} />
+            </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 120 }}>
             <label style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>Año minimo</label>
@@ -130,6 +146,12 @@ function AutosContent() {
             {filtrados.length} resultado{filtrados.length !== 1 ? "s" : ""}
           </span>
         </div>
+
+        {notaCotizacion(cot) && (
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, marginTop: -14, marginBottom: 24, lineHeight: 1.5 }}>
+            * {notaCotizacion(cot)}
+          </p>
+        )}
 
         {filtrados.length === 0 && (
           <p style={{ color: "rgba(255,255,255,0.4)", textAlign: "center", marginTop: 48 }}>
@@ -159,9 +181,14 @@ function AutosContent() {
                 <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 8 }}>
                   {auto.ano} · {auto.kilometros?.toLocaleString()} km
                 </p>
-                <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: 12 }}>
-                  USD {auto.precio?.toLocaleString()}
+                <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: textoConversion(auto, cot) ? 2 : 12 }}>
+                  {formatoPrecio(auto.precio, monedaDe(auto))}
                 </p>
+                {textoConversion(auto, cot) && (
+                  <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12 }}>
+                    {textoConversion(auto, cot)} *
+                  </p>
+                )}
                 <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5, minHeight: 36 }}>
                   {auto.descripcion ? (auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion) : ""}
                 </p>

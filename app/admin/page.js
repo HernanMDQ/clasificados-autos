@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { formatoPrecio, monedaDe } from "@/lib/precio";
 
 // Acciones de admin: se ejecutan en el servidor, que verifica la sesion
 const accionAdmin = async (body) => {
@@ -366,6 +367,7 @@ export default function Admin() {
       ano: auto.ano || "",
       kilometros: auto.kilometros || "",
       precio: auto.precio || "",
+      moneda: auto.moneda === "ARS" ? "ARS" : "USD",
       descripcion: auto.descripcion || "",
       telefono: auto.telefono || "",
       foto_url: auto.foto_url || null,
@@ -393,6 +395,7 @@ export default function Admin() {
       ano: Number(editForm.ano),
       kilometros: Number(editForm.kilometros),
       precio: Number(editForm.precio),
+      moneda: editForm.moneda,
       descripcion: editForm.descripcion,
       telefono: editForm.telefono,
     };
@@ -593,7 +596,7 @@ export default function Admin() {
               <div style={{ flex: 1 }}>
                 <h2 style={s.cardTitle}>{auto.marca} {auto.modelo}</h2>
                 <p style={s.cardSub}>
-                  {auto.ano} · {auto.kilometros?.toLocaleString()} km · USD {auto.precio?.toLocaleString()}
+                  {auto.ano} · {auto.kilometros?.toLocaleString()} km · {formatoPrecio(auto.precio, monedaDe(auto))}
                 </p>
                 <p style={s.cardDesc}>{auto.descripcion}</p>
                 <p style={s.cardMeta}>Tel: {auto.telefono}</p>
@@ -649,8 +652,14 @@ export default function Admin() {
                 <input style={s.modalInput} type="number" value={editForm.kilometros} onChange={(e) => setEditForm({ ...editForm, kilometros: e.target.value })} />
               </div>
               <div style={s.modalGroup}>
-                <label style={s.modalLabel}>Precio (USD)</label>
-                <input style={s.modalInput} type="number" value={editForm.precio} onChange={(e) => setEditForm({ ...editForm, precio: e.target.value })} />
+                <label style={s.modalLabel}>Precio</label>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <select style={{ ...s.modalInput, width: "auto" }} value={editForm.moneda} onChange={(e) => setEditForm({ ...editForm, moneda: e.target.value })}>
+                    <option value="USD" style={{ color: "#000" }}>USD</option>
+                    <option value="ARS" style={{ color: "#000" }}>$</option>
+                  </select>
+                  <input style={s.modalInput} type="number" value={editForm.precio} onChange={(e) => setEditForm({ ...editForm, precio: e.target.value })} />
+                </div>
               </div>
               <div style={s.modalGroup}>
                 <label style={s.modalLabel}>Telefono</label>

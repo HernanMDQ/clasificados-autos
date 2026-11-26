@@ -30,7 +30,7 @@ const normalizarMarca = (valor) => {
 
 export default function Publicar() {
   const [form, setForm] = useState({
-    marca: "", modelo: "", anno: "", km: "", precio: "", telefono: "", descripcion: ""
+    marca: "", modelo: "", anno: "", km: "", precio: "", moneda: "USD", telefono: "", descripcion: ""
   });
   const [fotos, setFotos] = useState([null, null, null]);
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export default function Publicar() {
       const res = await fetch("/api/generar-descripcion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ marca: form.marca, modelo: form.modelo, anno: form.anno, km: form.km, precio: form.precio, fotoBase64 }),
+        body: JSON.stringify({ marca: form.marca, modelo: form.modelo, anno: form.anno, km: form.km, precio: form.precio, moneda: form.moneda, fotoBase64 }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -210,6 +210,7 @@ export default function Publicar() {
           marca: marcaNormalizada, modelo: capitalizarPalabras(form.modelo),
           ano: parseInt(form.anno), kilometros: normalizarKm(form.km),
           precio: normalizarPrecio(form.precio),
+          moneda: form.moneda,
           telefono: telefonoNormalizado, descripcion: form.descripcion,
           foto_url: urls[0],
           foto_url_2: urls[1] || null,
@@ -319,8 +320,14 @@ export default function Publicar() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
-                <label style={labelStyle}>Precio en USD *</label>
-                <input name="precio" value={form.precio} onChange={handleChange} placeholder="Ej: 18000" style={inputStyle} />
+                <label style={labelStyle}>Precio *</label>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <select name="moneda" value={form.moneda} onChange={handleChange} style={{ ...inputStyle, width: "auto", cursor: "pointer" }}>
+                    <option value="USD" style={{ color: "#000" }}>USD</option>
+                    <option value="ARS" style={{ color: "#000" }}>$</option>
+                  </select>
+                  <input name="precio" value={form.precio} onChange={handleChange} placeholder={form.moneda === "ARS" ? "Ej: 25000000" : "Ej: 18000"} style={inputStyle} />
+                </div>
               </div>
               <div>
                 <label style={labelStyle}>Telefono de contacto *</label>

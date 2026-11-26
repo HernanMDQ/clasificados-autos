@@ -24,6 +24,12 @@ export async function POST(req) {
 
     if (error) return Response.json({ ok: false, error: error.message }, { status: 500 });
 
+    // La funcion editar_auto no maneja la moneda: se actualiza aparte
+    if (datos.moneda === "USD" || datos.moneda === "ARS") {
+      const { error: errMoneda } = await supabase.from("autos").update({ moneda: datos.moneda }).eq("id", id);
+      if (errMoneda) return Response.json({ ok: false, error: errMoneda.message }, { status: 500 });
+    }
+
     return Response.json({ ok: true });
   } catch (error) {
     return Response.json({ ok: false, error: error.message }, { status: 500 });

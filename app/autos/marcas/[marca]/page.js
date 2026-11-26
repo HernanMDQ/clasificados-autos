@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { formatoPrecio, monedaDe, textoConversion, notaCotizacion } from "@/lib/precio";
+import { obtenerCotizacion } from "@/lib/cotizacion";
 import Link from "next/link";
 
 const supabase = createClient(
@@ -54,6 +56,8 @@ export default async function MarcaPage({ params }) {
     .order("created_at", { ascending: false });
 
   const lista = autos || [];
+  const cotizacion = await obtenerCotizacion();
+  const cot = cotizacion?.venta ?? null;
 
   return (
     <main style={{ background: "#0d1520", minHeight: "100vh", padding: "32px 24px" }}>
@@ -123,9 +127,14 @@ export default async function MarcaPage({ params }) {
                     <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 13, marginBottom: 8 }}>
                       {auto.ano} · {auto.kilometros?.toLocaleString()} km
                     </p>
-                    <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: 12 }}>
-                      USD {auto.precio?.toLocaleString()}
+                    <p style={{ color: "#ff6b35", fontSize: 18, fontWeight: 500, marginBottom: textoConversion(auto, cot) ? 2 : 12 }}>
+                      {formatoPrecio(auto.precio, monedaDe(auto))}
                     </p>
+                    {textoConversion(auto, cot) && (
+                      <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12 }}>
+                        {textoConversion(auto, cot)} *
+                      </p>
+                    )}
                     <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, marginBottom: 12, lineHeight: 1.5, minHeight: 36 }}>
                       {auto.descripcion ? (auto.descripcion.length > 80 ? auto.descripcion.slice(0, 80) + "..." : auto.descripcion) : ""}
                     </p>
@@ -154,6 +163,12 @@ export default async function MarcaPage({ params }) {
               );
             })}
           </div>
+        )}
+
+        {lista.length > 0 && notaCotizacion(cot) && (
+          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 11, marginTop: 16, lineHeight: 1.5 }}>
+            * {notaCotizacion(cot)}
+          </p>
         )}
 
         {/* OTRAS MARCAS */}
